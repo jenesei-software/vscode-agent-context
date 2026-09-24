@@ -1,0 +1,17 @@
+.vscode/**
+.github/**
+.gitignore
+.gitattributes
+.npmrc
+src/**
+scripts/**
+docs/**
+tsconfig.json
+tsconfig.test.json
+esbuild.mjs
+biome.json
+out/**
+node_modules/**
+**/*.map
+.agents/**
+CONTRIBUTING.md

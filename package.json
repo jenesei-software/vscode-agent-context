@@ -1,0 +1,346 @@
+{
+  "name": "agent-context",
+  "displayName": "Agent Context",
+  "description": "See everything that shapes your AI agents in this project: skills, agents, rules, MCP servers and plugins, their scope, overrides and which applications pick them up.",
+  "version": "0.0.1",
+  "publisher": "jenesei-software",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jenesei-software/vscode-agent-context"
+  },
+  "bugs": {
+    "url": "https://github.com/jenesei-software/vscode-agent-context/issues"
+  },
+  "homepage": "https://github.com/jenesei-software/vscode-agent-context#readme",
+  "engines": {
+    "vscode": "^1.85.0",
+    "node": ">=22"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "agents",
+    "skills",
+    "mcp",
+    "context",
+    "copilot",
+    "codex",
+    "opencode",
+    "antigravity"
+  ],
+  "icon": "resources/icon.png",
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "agentContext",
+          "title": "Agent Context",
+          "icon": "resources/agent-context.svg"
+        }
+      ]
+    },
+    "views": {
+      "agentContext": [
+        {
+          "id": "agentContext.effective",
+          "name": "Effective",
+          "icon": "resources/agent-context.svg"
+        },
+        {
+          "id": "agentContext.skills",
+          "name": "Skills",
+          "icon": "resources/agent-context.svg"
+        },
+        {
+          "id": "agentContext.rules",
+          "name": "Rules & Instructions",
+          "icon": "resources/agent-context.svg"
+        },
+        {
+          "id": "agentContext.agents",
+          "name": "Agents",
+          "icon": "resources/agent-context.svg"
+        },
+        {
+          "id": "agentContext.mcp",
+          "name": "MCP Servers",
+          "icon": "resources/agent-context.svg"
+        },
+        {
+          "id": "agentContext.commands",
+          "name": "Commands & Plugins",
+          "icon": "resources/agent-context.svg"
+        },
+        {
+          "id": "agentContext.health",
+          "name": "Health",
+          "icon": "resources/agent-context.svg"
+        },
+        {
+          "id": "agentContext.applicability",
+          "name": "Applicability",
+          "type": "webview",
+          "icon": "resources/agent-context.svg"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "agentContext.refresh",
+        "title": "Refresh",
+        "category": "Agent Context",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "agentContext.filter",
+        "title": "Filter...",
+        "category": "Agent Context",
+        "icon": "$(filter)"
+      },
+      {
+        "command": "agentContext.clearFilter",
+        "title": "Clear Filter",
+        "category": "Agent Context"
+      },
+      {
+        "command": "agentContext.openFile",
+        "title": "Open File",
+        "category": "Agent Context"
+      },
+      {
+        "command": "agentContext.revealFile",
+        "title": "Reveal in Explorer",
+        "category": "Agent Context"
+      },
+      {
+        "command": "agentContext.openCanonical",
+        "title": "Open Canonical Source",
+        "category": "Agent Context"
+      },
+      {
+        "command": "agentContext.whyVisible",
+        "title": "Why Is This Visible?",
+        "category": "Agent Context"
+      },
+      {
+        "command": "agentContext.copyName",
+        "title": "Copy Name",
+        "category": "Agent Context"
+      },
+      {
+        "command": "agentContext.copyEnvName",
+        "title": "Copy Environment Variable Name",
+        "category": "Agent Context"
+      },
+      {
+        "command": "agentContext.toggleMcpEnabled",
+        "title": "Toggle Enabled",
+        "category": "Agent Context"
+      },
+      {
+        "command": "agentContext.runSyncAll",
+        "title": "Synchronize Everything",
+        "category": "Agent Context",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "agentContext.runSyncAgents",
+        "title": "Synchronize Agents",
+        "category": "Agent Context"
+      },
+      {
+        "command": "agentContext.runSyncSkills",
+        "title": "Synchronize Skills",
+        "category": "Agent Context"
+      },
+      {
+        "command": "agentContext.runSyncMcp",
+        "title": "Synchronize MCP Servers",
+        "category": "Agent Context"
+      },
+      {
+        "command": "agentContext.showApplicability",
+        "title": "Show Applicability Matrix",
+        "category": "Agent Context",
+        "icon": "$(table)"
+      },
+      {
+        "command": "agentContext.openSettings",
+        "title": "Open Settings",
+        "category": "Agent Context",
+        "icon": "$(gear)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "agentContext.filter",
+          "when": "view =~ /^agentContext\\.(effective|skills|rules|agents|mcp|commands|health)$/",
+          "group": "navigation@1"
+        },
+        {
+          "command": "agentContext.showApplicability",
+          "when": "view =~ /^agentContext\\.(effective|skills|rules|agents|mcp|commands|health)$/",
+          "group": "navigation@2"
+        },
+        {
+          "command": "agentContext.refresh",
+          "when": "view =~ /^agentContext\\.(effective|skills|rules|agents|mcp|commands|health)$/",
+          "group": "navigation@3"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "agentContext.openFile",
+          "when": "viewItem =~ /agentContext\\.openable/",
+          "group": "inline@1"
+        },
+        {
+          "command": "agentContext.whyVisible",
+          "when": "viewItem =~ /agentContext\\.provenance/",
+          "group": "1_inspect@1"
+        },
+        {
+          "command": "agentContext.openCanonical",
+          "when": "viewItem =~ /agentContext\\.generated/",
+          "group": "1_inspect@2"
+        },
+        {
+          "command": "agentContext.revealFile",
+          "when": "viewItem =~ /agentContext\\.openable/",
+          "group": "1_inspect@3"
+        },
+        {
+          "command": "agentContext.copyName",
+          "when": "viewItem =~ /agentContext\\.named/",
+          "group": "2_copy@1"
+        },
+        {
+          "command": "agentContext.copyEnvName",
+          "when": "viewItem =~ /agentContext\\.mcp/",
+          "group": "2_copy@2"
+        },
+        {
+          "command": "agentContext.toggleMcpEnabled",
+          "when": "viewItem =~ /agentContext\\.mcp/",
+          "group": "3_manage@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "agentContext.openFile",
+          "when": "false"
+        },
+        {
+          "command": "agentContext.revealFile",
+          "when": "false"
+        },
+        {
+          "command": "agentContext.openCanonical",
+          "when": "false"
+        },
+        {
+          "command": "agentContext.whyVisible",
+          "when": "false"
+        },
+        {
+          "command": "agentContext.copyName",
+          "when": "false"
+        },
+        {
+          "command": "agentContext.copyEnvName",
+          "when": "false"
+        },
+        {
+          "command": "agentContext.toggleMcpEnabled",
+          "when": "false"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Agent Context",
+      "properties": {
+        "agentContext.agentsRoot": {
+          "type": "string",
+          "default": "",
+          "scope": "machine-overridable",
+          "markdownDescription": "Canonical agent configuration directory. Leave empty to use `~/.agents`."
+        },
+        "agentContext.allowScripts": {
+          "type": "boolean",
+          "default": true,
+          "scope": "window",
+          "markdownDescription": "Allow running the canonical `sync-*.ps1` scripts from the panel. When off, sync commands only reveal the script instead of running it."
+        },
+        "agentContext.showThirdPartySkills": {
+          "type": "boolean",
+          "default": true,
+          "scope": "window",
+          "markdownDescription": "Also list skills discovered from third-party locations such as `~/.copilot/skills` and `~/.claude/skills`."
+        },
+        "agentContext.enabledApps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "vscode",
+              "antigravity-ide",
+              "antigravity",
+              "codex",
+              "opencode",
+              "claude",
+              "copilot"
+            ]
+          },
+          "default": [
+            "vscode",
+            "antigravity-ide",
+            "antigravity",
+            "codex",
+            "opencode",
+            "claude",
+            "copilot"
+          ],
+          "scope": "window",
+          "markdownDescription": "Applications to model in the applicability matrix and app badges."
+        },
+        "agentContext.mcpAutoSync": {
+          "type": "boolean",
+          "default": true,
+          "scope": "window",
+          "markdownDescription": "After toggling an MCP server's `enabled` flag in `servers.yaml`, run `sync-mcp.ps1` automatically."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build:prod",
+    "build": "node esbuild.mjs",
+    "build:watch": "node esbuild.mjs --watch",
+    "build:prod": "node esbuild.mjs --production",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit",
+    "check:registry": "node scripts/check-registry.mjs",
+    "check": "npm run lint && npm run typecheck && npm run check:registry",
+    "test": "tsc -p tsconfig.test.json && node --test \"out/test/*.test.js\"",
+    "vsix": "vsce package",
+    "vsix:publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.14",
+    "@types/node": "^22.20.4",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.2.1",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.5.4",
+    "yaml": "^2.8.1"
+  }
+}
