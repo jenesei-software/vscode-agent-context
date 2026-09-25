@@ -41,7 +41,7 @@
         {
           "id": "agentContext",
           "title": "Agent Context",
-          "icon": "resources/agent-context.svg"
+          "icon": "resources/icon.svg"
         }
       ]
     },
@@ -51,55 +51,55 @@
           "id": "agentContext.summary",
           "name": "Summary",
           "type": "webview",
-          "icon": "resources/agent-context.svg"
+          "icon": "resources/icon.svg"
         },
         {
           "id": "agentContext.skills",
           "name": "Skills",
           "type": "webview",
-          "icon": "resources/agent-context.svg"
+          "icon": "resources/icon.svg"
         },
         {
           "id": "agentContext.rules",
           "name": "Rules & Instructions",
           "type": "webview",
-          "icon": "resources/agent-context.svg"
+          "icon": "resources/icon.svg"
         },
         {
           "id": "agentContext.agents",
           "name": "Agents",
           "type": "webview",
-          "icon": "resources/agent-context.svg"
+          "icon": "resources/icon.svg"
         },
         {
           "id": "agentContext.mcp",
           "name": "MCP Servers",
           "type": "webview",
-          "icon": "resources/agent-context.svg"
+          "icon": "resources/icon.svg"
         },
         {
           "id": "agentContext.commands",
           "name": "Commands",
           "type": "webview",
-          "icon": "resources/agent-context.svg"
+          "icon": "resources/icon.svg"
         },
         {
           "id": "agentContext.plugins",
           "name": "Plugins",
           "type": "webview",
-          "icon": "resources/agent-context.svg"
+          "icon": "resources/icon.svg"
         },
         {
           "id": "agentContext.health",
           "name": "Health",
           "type": "webview",
-          "icon": "resources/agent-context.svg"
+          "icon": "resources/icon.svg"
         },
         {
           "id": "agentContext.applicability",
           "name": "Applicability",
           "type": "webview",
-          "icon": "resources/agent-context.svg"
+          "icon": "resources/icon.svg"
         }
       ]
     },
@@ -109,27 +109,6 @@
         "title": "Refresh",
         "category": "Agent Context",
         "icon": "$(refresh)"
-      },
-      {
-        "command": "agentContext.runSyncAll",
-        "title": "Synchronize Everything",
-        "category": "Agent Context",
-        "icon": "$(sync)"
-      },
-      {
-        "command": "agentContext.runSyncAgents",
-        "title": "Synchronize Agents",
-        "category": "Agent Context"
-      },
-      {
-        "command": "agentContext.runSyncSkills",
-        "title": "Synchronize Skills",
-        "category": "Agent Context"
-      },
-      {
-        "command": "agentContext.runSyncMcp",
-        "title": "Synchronize MCP Servers",
-        "category": "Agent Context"
       },
       {
         "command": "agentContext.showApplicability",
@@ -146,14 +125,9 @@
     "menus": {
       "view/title": [
         {
-          "command": "agentContext.runSyncAll",
-          "when": "view =~ /^agentContext\\./",
-          "group": "navigation@1"
-        },
-        {
           "command": "agentContext.refresh",
           "when": "view =~ /^agentContext\\./",
-          "group": "navigation@2"
+          "group": "navigation@1"
         }
       ]
     },
@@ -165,12 +139,6 @@
           "default": "",
           "scope": "machine-overridable",
           "markdownDescription": "Canonical agent configuration directory. Leave empty to use `~/.agents`."
-        },
-        "agentContext.allowScripts": {
-          "type": "boolean",
-          "default": true,
-          "scope": "window",
-          "markdownDescription": "Allow running the canonical `sync-*.ps1` scripts from the panel. When off, sync commands only reveal the script instead of running it."
         },
         "agentContext.showThirdPartySkills": {
           "type": "boolean",
@@ -203,12 +171,6 @@
           ],
           "scope": "window",
           "markdownDescription": "Applications shown in the Applicability view and in entity tooltips."
-        },
-        "agentContext.mcpAutoSync": {
-          "type": "boolean",
-          "default": true,
-          "scope": "window",
-          "markdownDescription": "After toggling an MCP server's `enabled` flag in `servers.yaml`, run `sync-mcp.ps1` automatically."
         }
       }
     }
@@ -233,7 +195,7 @@
     "@types/node": "^22.20.4",
     "@types/vscode": "^1.85.0",
     "@vscode/vsce": "^3.2.1",
-    "esbuild": "^0.24.0",
+    "esbuild": "^0.28.2",
     "typescript": "^5.5.4",
     "yaml": "^2.8.1"
   }

@@ -20,6 +20,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Restyled **Applicability** into the compact card style (scope matrix and
   application matrix).
 - Added a loading indicator to every webview.
+- The row details tooltip now opens from an info icon (visible on row hover)
+  and flips above the row when there is no room below.
+- The activity bar icon is now a 24×24 SVG that inherits the theme color
+  (`currentColor`) instead of a fixed brand color.
+- Added a screenshot gallery to the README (`resources/screenshots/`).
+
+### Removed
+
+- All synchronization commands (`Synchronize Everything / Agents / Skills /
+  MCP`) and the `agentContext.allowScripts` / `agentContext.mcpAutoSync`
+  settings. The extension only enables/disables entities and never runs
+  scripts.
 
 ## [0.0.1] - 2026-09-24
 

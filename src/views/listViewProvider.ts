@@ -1,11 +1,9 @@
 import * as path from "node:path";
 import * as vscode from "vscode";
-import { mcpAutoSync } from "../config";
 import type { ContextSnapshot } from "../model/types";
 import type { ContextService } from "../services/contextService";
 import { findSkillReferences, setFileEnabled } from "../services/fileEditor";
 import { setMcpEnabled } from "../services/mcpEditor";
-import type { SyncService } from "../services/syncService";
 import type { ListState, ListToggle } from "./listTypes";
 import { getListHtml } from "./webview/listHtml";
 
@@ -13,7 +11,6 @@ export interface ListViewDeps {
   service: ContextService;
   agentsRoot: () => string;
   refresh: () => Promise<void>;
-  sync: SyncService;
 }
 
 interface IncomingMessage {
@@ -119,9 +116,6 @@ export class ListViewProvider implements vscode.WebviewViewProvider {
       return;
     }
 
-    if (toggle.category === "mcp" && mcpAutoSync()) {
-      await this.deps.sync.run("mcp");
-    }
     await this.deps.refresh();
   }
 

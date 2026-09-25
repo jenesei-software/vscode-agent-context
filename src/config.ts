@@ -7,10 +7,8 @@ const CONFIG_SECTION = "agentContext";
 
 export const KEYS = {
   agentsRoot: "agentsRoot",
-  allowScripts: "allowScripts",
   showThirdPartySkills: "showThirdPartySkills",
   enabledApps: "enabledApps",
-  mcpAutoSync: "mcpAutoSync",
 } as const;
 
 function configuration(): vscode.WorkspaceConfiguration {
@@ -25,16 +23,8 @@ export function agentsRootSetting(): string {
   return resolveToken(configured);
 }
 
-export function allowScripts(): boolean {
-  return configuration().get<boolean>(KEYS.allowScripts) ?? true;
-}
-
 export function showThirdPartySkills(): boolean {
   return configuration().get<boolean>(KEYS.showThirdPartySkills) ?? true;
-}
-
-export function mcpAutoSync(): boolean {
-  return configuration().get<boolean>(KEYS.mcpAutoSync) ?? true;
 }
 
 export function enabledApps(): AppId[] {

@@ -8,7 +8,6 @@ import {
 } from "./config";
 import type { ContextSnapshot } from "./model/types";
 import { ContextService } from "./services/contextService";
-import { SyncService } from "./services/syncService";
 import { WatcherService } from "./services/watcherService";
 import { StatusBar } from "./statusBar";
 import { ApplicabilityViewProvider } from "./views/applicabilityViewProvider";
@@ -57,11 +56,6 @@ export async function activate(
   context.subscriptions.push(statusBar);
   service.onDidChange((snapshot) => statusBar.update(snapshot));
 
-  const sync = new SyncService(
-    output,
-    () => service.current?.agentsRoot ?? agentsRootSetting(),
-  );
-
   const refresh = async (): Promise<void> => {
     try {
       await service.refresh();
@@ -77,7 +71,6 @@ export async function activate(
     service,
     agentsRoot: () => agentsRootSetting(),
     refresh,
-    sync,
   };
 
   for (const { id, build } of LIST_VIEWS) {
@@ -113,7 +106,7 @@ export async function activate(
     watcher.watch(roots);
   };
 
-  registerCommands(context, { service, output, sync, refresh });
+  registerCommands(context, { refresh });
 
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration((event) => {

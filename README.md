@@ -11,7 +11,15 @@ entity, its scope (global or project), overrides and — most importantly — wh
 applications pick it up (VS Code, Antigravity IDE, Antigravity/Gemini, Codex,
 opencode, Claude, Copilot).
 
-<p><img src="docs/screenshot.png" alt="Agent Context" width="400"></p>
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center"><img src="resources/screenshots/summary.png" alt="Summary" width="230"><br><sub><b>Summary</b></sub></td>
+    <td align="center"><img src="resources/screenshots/skills.png" alt="Skills" width="230"><br><sub><b>Skills</b></sub></td>
+    <td align="center"><img src="resources/screenshots/applicability.png" alt="Applicability" width="230"><br><sub><b>Applicability</b></sub></td>
+  </tr>
+</table>
 
 ## Features
 
@@ -31,17 +39,16 @@ opencode, Claude, Copilot).
 - **Health / Diagnostics** — broken frontmatter, duplicate names, missing
   referenced skills, invalid YAML/JSONC/TOML, missing secret environment
   variables, generated Codex agents without a canonical source.
-- **Actions** — run `sync-all` / `sync-agents` / `sync-skills` / `sync-mcp`,
-  open files, open generated Codex agents, and copy environment variable names.
+- **Actions** — enable/disable entities, open files, open generated Codex
+  agents, and copy environment variable names.
 - **Live refresh** — file watchers on `~/.agents/**` and the workspace root.
 - **Secret safety** — only environment variable *names* are read and shown,
   never values; the panel reports whether each variable is set in the process.
 
 ## How it works
 
-`~/.agents` is treated as the canonical source of truth. The extension reads it
-(and a set of project locations) without ever writing to generated files unless
-you explicitly run a sync or toggle an entity.
+`~/.agents` is treated as the canonical source of truth. The extension is
+read-only except for toggles: it never runs scripts or regenerates files.
 
 ### Scopes and overrides
 
@@ -79,8 +86,6 @@ The paths-per-application mapping is versioned in `src/model/apps.ts`
 
 - VS Code `1.85.0` or newer.
 - A canonical `~/.agents` directory (or a custom `agentContext.agentsRoot`).
-- PowerShell 7 (`pwsh`) for the sync actions; `powershell.exe` is used as a
-  fallback on Windows.
 
 ## Installation
 
@@ -100,18 +105,14 @@ Install **Agent Context** from the Visual Studio Marketplace, or run
 | Setting | Default | Scope | Description |
 | --- | --- | --- | --- |
 | `agentContext.agentsRoot` | `""` | machine-overridable | Canonical directory. Empty uses `~/.agents`. |
-| `agentContext.allowScripts` | `true` | window | Run the canonical `sync-*.ps1` scripts from the panel. |
 | `agentContext.showThirdPartySkills` | `true` | window | Include `~/.copilot/skills` and `~/.claude/skills`. |
 | `agentContext.enabledApps` | all | window | Applications shown in Applicability and in tooltips. |
-| `agentContext.mcpAutoSync` | `true` | window | Run `sync-mcp.ps1` after toggling a server's `enabled`. |
 
 ## Commands
 
 | Command | Description |
 | --- | --- |
 | `Agent Context: Refresh` | Re-scan canonical and project sources. |
-| `Agent Context: Synchronize Everything` | Run `sync-all.ps1`. |
-| `Agent Context: Synchronize Agents / Skills / MCP Servers` | Run the matching script. |
 | `Agent Context: Show Applicability` | Focus the Applicability view. |
 | `Agent Context: Open Settings` | Open the extension settings. |
 
@@ -126,7 +127,7 @@ src/
 ├─ model/                  types + versioned application registry
 ├─ parse/                  YAML frontmatter, JSONC and TOML parsers
 ├─ discovery/              scanners (skills, rules, agents, mcp, commands, plugins) + merge
-├─ services/               context service, watcher, sync runner, file/MCP editors
+├─ services/               context service, watcher, file/MCP editors
 ├─ views/                  generic list webview, builders, applicability webview
 └─ test/                   node:test unit tests for the pure layers
 ```
@@ -140,9 +141,9 @@ The plan below is fixed here on purpose, so the scope stays explicit.
 - Skills, Rules, Agents, MCP, Commands and Plugins across global and project
   scopes, with provenance, shadowing and a **Summary** view.
 - Seven-application model and the applicability webview.
-- Health diagnostics, status bar, live refresh, search/filter.
-- Actions: run sync scripts, open/reveal, copy names and environment variable
-  names, toggle an MCP server's `enabled` in `servers.yaml`.
+- Health diagnostics, status bar, live refresh.
+- Actions: enable/disable entities, open/reveal, copy environment variable
+  names, toggle MCP servers.
 
 ### v2 — generated vs canonical
 

@@ -5,14 +5,27 @@
       "type": "npm",
       "script": "build",
       "group": "build",
-      "problemMatcher": "$tsc",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent"
+      },
       "label": "npm: build"
     },
     {
       "type": "npm",
       "script": "build:watch",
       "isBackground": true,
-      "problemMatcher": "$tsc-watch",
+      "problemMatcher": {
+        "owner": "esbuild-watch",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "\\[watch\\] build started",
+          "endsPattern": "\\[watch\\] build finished"
+        }
+      },
       "label": "npm: build:watch"
     }
   ]

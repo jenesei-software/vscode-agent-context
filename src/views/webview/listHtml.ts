@@ -98,6 +98,7 @@ export function getListHtml(_webview: vscode.Webview): string {
   }
   .row:hover .link,
   .link:focus-visible { opacity: 1; }
+  .link.info { font-size: 13px; line-height: 1; }
   .link:hover { color: var(--vscode-textLink-activeForeground); text-decoration: underline; }
   .switch { position: relative; display: inline-block; width: 30px; height: 16px; flex: none; }
   .switch input { position: absolute; opacity: 0; width: 0; height: 0; }
@@ -145,8 +146,9 @@ export function getListHtml(_webview: vscode.Webview): string {
     line-height: 1.4;
     white-space: normal;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    pointer-events: none;
   }
-  .row:hover .hint { display: block; }
+  .hint.above { top: auto; bottom: calc(100% - 2px); }
   .hint-meta { opacity: 0.7; margin-top: 4px; white-space: pre-line; }
   .empty { opacity: 0.7; padding: 8px 2px; }
   .loading { display: flex; align-items: center; gap: 8px; padding: 10px 2px; opacity: 0.8; }
@@ -277,6 +279,27 @@ export function getListHtml(_webview: vscode.Webview): string {
       hint.appendChild(meta);
     }
     element.appendChild(hint);
+
+    const info = document.createElement("button");
+    info.type = "button";
+    info.className = "link info";
+    info.textContent = "\\u24d8";
+    info.title = "Details";
+    const showHint = () => {
+      hint.style.display = "block";
+      const rowRect = element.getBoundingClientRect();
+      const hintRect = hint.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rowRect.bottom;
+      hint.classList.toggle("above", spaceBelow < hintRect.height + 16);
+    };
+    const hideHint = () => {
+      hint.style.display = "none";
+    };
+    info.addEventListener("mouseenter", showHint);
+    info.addEventListener("mouseleave", hideHint);
+    info.addEventListener("focus", showHint);
+    info.addEventListener("blur", hideHint);
+    actions.insertBefore(info, actions.firstChild);
 
     return element;
   }
