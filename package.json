@@ -2,7 +2,7 @@
   "name": "agent-context-manager",
   "displayName": "Agent Context Manager",
   "description": "See everything that shapes your AI agents in this project: skills, agents, rules, MCP servers and plugins, their scope, overrides and which applications pick them up.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "publisher": "jenesei-software",
   "license": "MIT",
   "repository": {
