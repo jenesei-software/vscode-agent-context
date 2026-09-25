@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-09-26
+
+### Fixed
+
+- The DonationAlerts funding link pointed to the wrong account; the repository
+  "Sponsor" button and the README now use the personal one.
+
+### Changed
+
+- The README "Support the project" section now matches the NVM Manager wording.
+
 ## [1.0.3] - 2026-09-26
 
 ### Fixed
