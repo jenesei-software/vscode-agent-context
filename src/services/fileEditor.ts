@@ -27,19 +27,28 @@ export async function setFileEnabled(
   const parked = parkedPath(file);
 
   try {
+    const active = await isFile(file);
+    const parkedExists = await isFile(parked);
+    if (active && parkedExists) {
+      return {
+        ok: false,
+        error: `Both "${file}" and "${parked}" exist. Resolve the conflict manually.`,
+      };
+    }
+
     if (enable) {
-      if (await isFile(file)) {
+      if (active) {
         return { ok: true };
       }
-      if (!(await isFile(parked))) {
+      if (!parkedExists) {
         return { ok: false, error: `${parked} was not found.` };
       }
       await renameFile(parked, file);
     } else {
-      if (await isFile(parked)) {
+      if (parkedExists) {
         return { ok: true };
       }
-      if (!(await isFile(file))) {
+      if (!active) {
         return { ok: false, error: `${file} was not found.` };
       }
       await renameFile(file, parked);

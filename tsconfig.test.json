@@ -3,6 +3,7 @@
   "compilerOptions": {
     "module": "CommonJS",
     "moduleResolution": "Node",
+    "types": ["node", "mocha"],
     "noEmit": false,
     "rootDir": "src",
     "outDir": "out"
@@ -13,6 +14,7 @@
     "src/model/**/*.ts",
     "src/discovery/**/*.ts",
     "src/services/**/*.ts",
+    "src/views/**/*.ts",
     "src/test/**/*.ts"
   ],
   "exclude": ["node_modules", "out", "dist"]

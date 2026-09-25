@@ -1,6 +1,5 @@
-import { writeFile } from "node:fs/promises";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
-import { readText } from "../util/fsutil";
+import { readText, writeAtomic } from "../util/fsutil";
 
 export interface McpEditResult {
   ok: boolean;
@@ -42,7 +41,7 @@ export async function setMcpEnabled(
 
   try {
     const text = stringifyYaml(document, { lineWidth: 0 });
-    await writeFile(serversPath, text, "utf8");
+    await writeAtomic(serversPath, text);
   } catch (error) {
     return { ok: false, error: (error as Error).message };
   }

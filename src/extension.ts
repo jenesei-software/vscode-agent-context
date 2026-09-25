@@ -1,3 +1,4 @@
+import * as path from "node:path";
 import * as vscode from "vscode";
 import { registerCommands } from "./commands";
 import {
@@ -10,6 +11,7 @@ import type { ContextSnapshot } from "./model/types";
 import { ContextService } from "./services/contextService";
 import { WatcherService } from "./services/watcherService";
 import { StatusBar } from "./statusBar";
+import { isDirectory } from "./util/fsutil";
 import { ApplicabilityViewProvider } from "./views/applicabilityViewProvider";
 import {
   buildAgents,
@@ -74,11 +76,10 @@ export async function activate(
   };
 
   for (const { id, build } of LIST_VIEWS) {
+    const provider = new ListViewProvider(id, build, deps);
     context.subscriptions.push(
-      vscode.window.registerWebviewViewProvider(
-        id,
-        new ListViewProvider(id, build, deps),
-      ),
+      provider,
+      vscode.window.registerWebviewViewProvider(id, provider),
     );
   }
 
@@ -95,15 +96,34 @@ export async function activate(
   context.subscriptions.push(watcher);
 
   let watchedRoots: string[] = [];
-  const syncWatchers = (): void => {
-    const roots = [agentsRootSetting(), workspaceRoot()].filter(
-      (root): root is string => root !== undefined && root !== "",
-    );
-    if (roots.join("|") === watchedRoots.join("|")) {
+  const syncWatchers = async (): Promise<void> => {
+    const candidates = [agentsRootSetting()];
+    const root = workspaceRoot();
+    if (root) {
+      for (const relative of [
+        ".agents",
+        ".github/agents",
+        ".github/skills",
+        ".github/prompts",
+        ".claude",
+        ".opencode",
+        ".cursor",
+        ".vscode",
+      ]) {
+        candidates.push(path.join(root, ...relative.split("/")));
+      }
+    }
+    const existing: string[] = [];
+    for (const candidate of candidates) {
+      if (await isDirectory(candidate)) {
+        existing.push(candidate);
+      }
+    }
+    if (existing.join("|") === watchedRoots.join("|")) {
       return;
     }
-    watchedRoots = roots;
-    watcher.watch(roots);
+    watchedRoots = existing;
+    watcher.watch(existing);
   };
 
   registerCommands(context, { refresh });
@@ -113,16 +133,16 @@ export async function activate(
       if (!event.affectsConfiguration("agentContext")) {
         return;
       }
-      syncWatchers();
+      void syncWatchers();
       void refresh();
     }),
     vscode.workspace.onDidChangeWorkspaceFolders(() => {
-      syncWatchers();
+      void syncWatchers();
       void refresh();
     }),
   );
 
-  syncWatchers();
+  await syncWatchers();
   await refresh();
 }
 

@@ -1,0 +1,18 @@
+{
+  "view.summary": "Сводка",
+  "view.skills": "Скиллы",
+  "view.rules": "Правила и инструкции",
+  "view.agents": "Агенты",
+  "view.mcp": "MCP-серверы",
+  "view.commands": "Команды",
+  "view.plugins": "Плагины",
+  "view.health": "Здоровье",
+  "view.applicability": "Применимость",
+  "command.refresh": "Обновить",
+  "command.showApplicability": "Показать применимость",
+  "command.openSettings": "Открыть настройки",
+  "config.title": "Agent Context",
+  "config.agentsRoot": "Канонический каталог конфигурации агентов. Пусто — использовать `~/.agents`.",
+  "config.showThirdPartySkills": "Также показывать скиллы из сторонних мест, например `~/.copilot/skills` и `~/.claude/skills`.",
+  "config.enabledApps": "Приложения, показываемые в «Применимости» и в подсказках сущностей."
+}

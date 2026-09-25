@@ -3,8 +3,13 @@
 .gitignore
 .gitattributes
 .npmrc
+package-lock.json
+*.vsix
+*.log
 src/**
 scripts/**
+docs/**
+.vscode-test.mjs
 tsconfig.json
 tsconfig.test.json
 esbuild.mjs

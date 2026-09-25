@@ -20,14 +20,17 @@ npm run build:watch
 Useful scripts:
 
 ```powershell
-npm run build          # bundle once
-npm run build:watch    # bundle on change
-npm run lint           # biome check
-npm run lint:fix       # biome check --write
-npm run typecheck      # tsc --noEmit
-npm run check:registry # fail if the lockfile uses a non-public registry
-npm test               # node:test unit tests
-npm run check          # lint + typecheck + registry
+npm run build             # bundle once
+npm run build:watch       # bundle on change
+npm run build:prod        # minified production bundle
+npm run lint              # biome check
+npm run lint:fix          # biome check --write
+npm run typecheck         # tsc --noEmit
+npm run check:registry    # fail if the lockfile uses a non-public registry
+npm run l10n:extract      # regenerate l10n/bundle.l10n.json from source
+npm test                  # node:test unit tests
+npm run test:integration  # VS Code integration tests (downloads a host)
+npm run check             # lint + typecheck + registry
 ```
 
 ## Run the extension locally
@@ -48,29 +51,26 @@ code --install-extension agent-context-0.0.1.vsix
 | Path | Purpose |
 | --- | --- |
 | `src/extension.ts` | Composition root and activation. |
-| `src/commands.ts` | Command registration and handlers. |
+| `src/commands.ts` | Command registration. |
 | `src/config.ts` | Typed access to settings and the workspace root. |
 | `src/model/` | Domain types and the versioned application registry. |
 | `src/parse/` | Pure parsers for YAML frontmatter, JSONC and TOML. |
 | `src/discovery/` | Scanners and the merge/precedence engine. |
-| `src/services/` | Context service, watcher, sync runner, MCP editor. |
-| `src/views/` | Tree providers, applicability webview and filtering. |
-| `src/util/` | Filesystem, path and exec helpers. |
-| `src/test/` | Unit tests for the pure layers. |
+| `src/services/` | Context service, watcher, file/MCP editors and path guard. |
+| `src/views/` | Generic list webview, builders and the applicability webview. |
+| `src/util/` | Filesystem and path helpers. |
+| `src/test/` | Unit tests (`*.test.ts`) and the integration harness. |
 
 ## Code guidelines
 
-- English comments and user-facing strings.
+- English comments and source strings; user-facing strings go through
+  `vscode.l10n.t(...)` (runtime) or `package.nls.json` keys (manifest).
 - Follow Conventional Commits; the rules live in `.agents/rules/git-commits.md`.
-- Keep the pure layers (`parse`, `model`, `discovery`, `util`) free of the VS
-  Code API so they stay unit-testable.
+- Keep the pure layers (`parse`, `model`, `discovery`, `util`, `views/listBuilders`)
+  free of the VS Code API so they stay unit-testable.
+- Add a bullet under `## [Unreleased]` in `CHANGELOG.md`.
 - Make sure `npm run check` and `npm test` pass, and keep pull requests focused.
 
 ## Releasing
 
-The `Release` workflow is triggered manually. It bumps the version, tags the
-commit, builds the `.vsix`, publishes it to the Visual Studio Marketplace when
-the `VSCE_PAT` secret is set, and attaches it to a GitHub release.
-
-One-time setup: create the `jenesei-software` publisher, generate a Personal
-Access Token with the Marketplace scope, and store it as the `VSCE_PAT` secret.
+Maintainer steps live in [docs/RELEASING.md](docs/RELEASING.md).

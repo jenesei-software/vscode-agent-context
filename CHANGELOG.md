@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Global commit-rule candidates were looked up under `~/.agents/.agents/rules`
+  (double prefix); they now resolve to `~/.agents/rules`.
+- Removed a leftover `nvmManager.autoSwitch` setting from `.vscode/settings.json`.
+
+### Added
+
+- Localization: `package.nls.json` / `package.nls.ru.json` for manifest
+  strings, `l10n/bundle.l10n.ru.json` for runtime strings, the `"l10n"` field
+  and an `l10n:extract` script. Manifest titles now use `%key%`.
+- Integration test harness: `.vscode-test.mjs`, `src/test/integration/` and a
+  CI `integration` job.
+- `docs/RELEASING.md` with the release process.
+- Accessibility: accessible names on every control, visible keyboard focus,
+  `role="status"` live regions, larger hit areas, table `scope`/`caption` and
+  `aria-label` on matrix marks.
+- Unit tests for the MCP editor, `.disabled` scanning (skills/agents/rules) and
+  the list builders.
+- GitHub Actions are pinned to commit SHAs.
+
+### Security
+
+- Enabling/disabling and open/reveal now only act on entities from the current
+  snapshot and only inside managed roots (`~/.agents`, the workspace and the
+  known global config directories), with symlinks resolved via `realpath`.
+- `servers.yaml` is written atomically (temporary file + rename) so a failed
+  write cannot corrupt it.
+- The extension is read-only in untrusted workspaces
+  (`capabilities.untrustedWorkspaces: limited`).
+- File reads are capped at 4 MB to avoid unbounded memory use.
+- Removed the unused PowerShell execution helper (`util/exec.ts`).
+
 ### Changed
 
 - Unified every view into the compact card style: **Rules**, **Agents**,
@@ -25,6 +58,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The activity bar icon is now a 24×24 SVG that inherits the theme color
   (`currentColor`) instead of a fixed brand color.
 - Added a screenshot gallery to the README (`resources/screenshots/`).
+- File watchers now watch only the relevant subdirectories instead of the whole
+  workspace, and the extension activates lazily (on view or command use).
+- The VSIX no longer ships `package-lock.json`, `*.vsix` or `*.log`.
+- Declared `capabilities.virtualWorkspaces: false` and extended the
+  `.gitattributes` binary list; added lockfile `overrides` for the test
+  toolchain.
 
 ### Removed
 

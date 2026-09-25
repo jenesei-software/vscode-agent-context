@@ -1,6 +1,17 @@
-import { createHash } from "node:crypto";
-import { readdir, readFile, rename, stat } from "node:fs/promises";
+import { createHash, randomUUID } from "node:crypto";
+import {
+  readdir,
+  readFile,
+  realpath,
+  rename,
+  rm,
+  stat,
+  writeFile,
+} from "node:fs/promises";
 import * as path from "node:path";
+
+/** Files larger than this are treated as unreadable to avoid unbounded reads. */
+export const MAX_TEXT_BYTES = 4 * 1024 * 1024;
 
 export async function pathExists(target: string): Promise<boolean> {
   try {
@@ -27,11 +38,49 @@ export async function isFile(target: string): Promise<boolean> {
   }
 }
 
-export async function readText(target: string): Promise<string | undefined> {
+export async function readText(
+  target: string,
+  maxBytes = MAX_TEXT_BYTES,
+): Promise<string | undefined> {
   try {
+    const info = await stat(target);
+    if (!info.isFile() || info.size > maxBytes) {
+      return undefined;
+    }
     return await readFile(target, "utf8");
   } catch {
     return undefined;
+  }
+}
+
+export async function realPath(target: string): Promise<string | undefined> {
+  try {
+    return await realpath(target);
+  } catch {
+    return undefined;
+  }
+}
+
+/** Writes via a temporary file and an atomic rename, preserving the target. */
+export async function writeAtomic(
+  target: string,
+  content: string,
+): Promise<void> {
+  const directory = path.dirname(target);
+  const temporary = path.join(
+    directory,
+    `.${path.basename(target)}.tmp-${randomUUID()}`,
+  );
+  try {
+    await writeFile(temporary, content, "utf8");
+    await rename(temporary, target);
+  } catch (error) {
+    try {
+      await rm(temporary, { force: true });
+    } catch {
+      // Ignore cleanup failures; the original error is more relevant.
+    }
+    throw error;
   }
 }
 

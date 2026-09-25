@@ -1,5 +1,18 @@
 import type * as vscode from "vscode";
 
+export interface ListStrings {
+  scanning: string;
+  nothing: string;
+  noDescription: string;
+  details: string;
+  open: string;
+  reveal: string;
+  codex: string;
+  env: string;
+  enable: string;
+  disable: string;
+}
+
 function createNonce(): string {
   const chars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -10,7 +23,10 @@ function createNonce(): string {
   return text;
 }
 
-export function getListHtml(_webview: vscode.Webview): string {
+export function getListHtml(
+  _webview: vscode.Webview,
+  strings: ListStrings,
+): string {
   const nonce = createNonce();
   const csp = [
     "default-src 'none'",
@@ -35,9 +51,21 @@ export function getListHtml(_webview: vscode.Webview): string {
     color: var(--vscode-foreground);
     background: transparent;
   }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
   .summary { opacity: 0.7; font-size: 11px; margin: 0 0 8px; }
   .group-title {
-    padding: 8px 2px 5px;
+    margin: 8px 0 5px;
+    padding: 0 2px;
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
@@ -57,13 +85,14 @@ export function getListHtml(_webview: vscode.Webview): string {
     justify-content: space-between;
     gap: 10px;
     padding: 5px 10px;
-    min-height: 30px;
+    min-height: 32px;
   }
   .row:hover { background: var(--vscode-list-hoverBackground); }
+  .row:focus-within { outline: 1px solid var(--vscode-focusBorder); outline-offset: -1px; }
   .divider { height: 1px; background: var(--vscode-widget-border, var(--vscode-panel-border)); }
   .row-main { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
   .name {
-    padding: 0;
+    padding: 3px 0;
     border: none;
     background: none;
     color: var(--vscode-foreground);
@@ -84,9 +113,9 @@ export function getListHtml(_webview: vscode.Webview): string {
   .state.warning { color: var(--vscode-charts-orange, #d29922); }
   .state.error { color: var(--vscode-charts-red, #f85149); }
   .state.info { opacity: 0.7; }
-  .row-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+  .row-actions { display: flex; align-items: center; gap: 6px; flex: none; }
   .link {
-    padding: 0;
+    padding: 4px 5px;
     border: none;
     background: none;
     color: var(--vscode-textLink-foreground);
@@ -100,7 +129,10 @@ export function getListHtml(_webview: vscode.Webview): string {
   .link:focus-visible { opacity: 1; }
   .link.info { font-size: 13px; line-height: 1; }
   .link:hover { color: var(--vscode-textLink-activeForeground); text-decoration: underline; }
-  .switch { position: relative; display: inline-block; width: 30px; height: 16px; flex: none; }
+  .name:focus-visible,
+  .link:focus-visible { outline: 2px solid var(--vscode-focusBorder); outline-offset: 1px; }
+  .switch { position: relative; display: inline-block; width: 30px; height: 16px; flex: none; margin: 0 2px; }
+  .switch::after { content: ""; position: absolute; inset: -4px; }
   .switch input { position: absolute; opacity: 0; width: 0; height: 0; }
   .slider {
     position: absolute;
@@ -168,12 +200,16 @@ export function getListHtml(_webview: vscode.Webview): string {
 </style>
 </head>
 <body>
-<div class="summary" id="summary"></div>
-<div id="content"></div>
+<main>
+  <div class="summary" id="summary" role="status" aria-live="polite"></div>
+  <div id="content"></div>
+</main>
 <script nonce="${nonce}">
   const vscode = acquireVsCodeApi();
+  const strings = ${JSON.stringify(strings)};
   const summary = document.getElementById("summary");
   const content = document.getElementById("content");
+  let rowId = 0;
 
   function send(message) {
     vscode.postMessage(message);
@@ -183,10 +219,13 @@ export function getListHtml(_webview: vscode.Webview): string {
     content.textContent = "";
     const wrap = document.createElement("div");
     wrap.className = "loading";
+    wrap.setAttribute("role", "status");
+    wrap.setAttribute("aria-live", "polite");
     const spinner = document.createElement("span");
     spinner.className = "spinner";
+    spinner.setAttribute("aria-hidden", "true");
     const text = document.createElement("span");
-    text.textContent = "Scanning...";
+    text.textContent = strings.scanning;
     wrap.appendChild(spinner);
     wrap.appendChild(text);
     content.appendChild(wrap);
@@ -195,25 +234,30 @@ export function getListHtml(_webview: vscode.Webview): string {
   function switchEl(row) {
     const label = document.createElement("label");
     label.className = "switch";
-    label.title = row.toggle.enabled ? "Disable" : "Enable";
     const input = document.createElement("input");
     input.type = "checkbox";
     input.checked = row.toggle.enabled;
+    input.setAttribute(
+      "aria-label",
+      (row.toggle.enabled ? strings.disable : strings.enable) + " " + row.name,
+    );
     input.addEventListener("change", () => {
       send({ type: "toggle", toggle: row.toggle });
     });
     label.appendChild(input);
     const slider = document.createElement("span");
     slider.className = "slider";
+    slider.setAttribute("aria-hidden", "true");
     label.appendChild(slider);
     return label;
   }
 
-  function linkButton(text, onClick) {
+  function linkButton(text, ariaLabel, onClick) {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "link";
     button.textContent = text;
+    button.setAttribute("aria-label", ariaLabel);
     button.addEventListener("click", onClick);
     return button;
   }
@@ -228,6 +272,7 @@ export function getListHtml(_webview: vscode.Webview): string {
     name.type = "button";
     name.className = "name";
     name.textContent = row.name;
+    name.setAttribute("aria-label", strings.open + " " + row.name);
     if (row.path) {
       name.addEventListener("click", () => send({ type: "open", path: row.path }));
     }
@@ -241,17 +286,29 @@ export function getListHtml(_webview: vscode.Webview): string {
     const actions = document.createElement("span");
     actions.className = "row-actions";
     if (row.path) {
-      actions.appendChild(linkButton("Open", () => send({ type: "open", path: row.path })));
-      actions.appendChild(linkButton("Reveal", () => send({ type: "reveal", path: row.path })));
+      actions.appendChild(
+        linkButton(strings.open, strings.open + " " + row.name, () =>
+          send({ type: "open", path: row.path }),
+        ),
+      );
+      actions.appendChild(
+        linkButton(strings.reveal, strings.reveal + " " + row.name, () =>
+          send({ type: "reveal", path: row.path }),
+        ),
+      );
     }
     if (row.generatedPath) {
       actions.appendChild(
-        linkButton("Codex", () => send({ type: "open", path: row.generatedPath })),
+        linkButton(strings.codex, strings.codex + " " + row.name, () =>
+          send({ type: "open", path: row.generatedPath }),
+        ),
       );
     }
     if (row.envVars && row.envVars.length > 0) {
       actions.appendChild(
-        linkButton("Env", () => send({ type: "copyEnv", values: row.envVars })),
+        linkButton(strings.env, strings.env + " " + row.name, () =>
+          send({ type: "copyEnv", values: row.envVars }),
+        ),
       );
     }
     if (row.toggle) {
@@ -259,11 +316,7 @@ export function getListHtml(_webview: vscode.Webview): string {
     }
     element.appendChild(actions);
 
-    const hint = document.createElement("div");
-    hint.className = "hint";
-    const text = document.createElement("div");
-    text.textContent = row.description || "No description.";
-    hint.appendChild(text);
+    const description = row.description || strings.noDescription;
     const metaLines = [];
     if (row.meta) {
       for (const line of row.meta) {
@@ -272,6 +325,27 @@ export function getListHtml(_webview: vscode.Webview): string {
         }
       }
     }
+
+    const id = "desc-" + ++rowId;
+    const describedBy = document.createElement("span");
+    describedBy.className = "visually-hidden";
+    describedBy.id = id;
+    describedBy.textContent =
+      description + (metaLines.length > 0 ? ". " + metaLines.join(". ") : "");
+    element.appendChild(describedBy);
+
+    const info = document.createElement("button");
+    info.type = "button";
+    info.className = "link info";
+    info.textContent = "\\u24d8";
+    info.setAttribute("aria-label", strings.details + " " + row.name);
+    info.setAttribute("aria-describedby", id);
+    const hint = document.createElement("div");
+    hint.className = "hint";
+    hint.setAttribute("aria-hidden", "true");
+    const text = document.createElement("div");
+    text.textContent = description;
+    hint.appendChild(text);
     if (metaLines.length > 0) {
       const meta = document.createElement("div");
       meta.className = "hint-meta";
@@ -279,12 +353,6 @@ export function getListHtml(_webview: vscode.Webview): string {
       hint.appendChild(meta);
     }
     element.appendChild(hint);
-
-    const info = document.createElement("button");
-    info.type = "button";
-    info.className = "link info";
-    info.textContent = "\\u24d8";
-    info.title = "Details";
     const showHint = () => {
       hint.style.display = "block";
       const rowRect = element.getBoundingClientRect();
@@ -306,7 +374,7 @@ export function getListHtml(_webview: vscode.Webview): string {
 
   function renderGroup(group) {
     const section = document.createElement("section");
-    const title = document.createElement("div");
+    const title = document.createElement("h2");
     title.className = "group-title";
     title.textContent = group.label;
     const count = document.createElement("span");
@@ -321,6 +389,7 @@ export function getListHtml(_webview: vscode.Webview): string {
       if (index > 0) {
         const divider = document.createElement("div");
         divider.className = "divider";
+        divider.setAttribute("role", "presentation");
         card.appendChild(divider);
       }
       card.appendChild(renderRow(row));
@@ -344,7 +413,7 @@ export function getListHtml(_webview: vscode.Webview): string {
     if (state.groups.length === 0) {
       const empty = document.createElement("div");
       empty.className = "empty";
-      empty.textContent = "Nothing found.";
+      empty.textContent = strings.nothing;
       content.appendChild(empty);
       return;
     }

@@ -32,9 +32,14 @@
   ],
   "icon": "resources/icon.png",
   "main": "./dist/extension.js",
-  "activationEvents": [
-    "onStartupFinished"
-  ],
+  "capabilities": {
+    "virtualWorkspaces": false,
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "In an untrusted workspace the panel is read-only: enabling and disabling entities is unavailable."
+    }
+  },
+  "l10n": "./l10n",
   "contributes": {
     "viewsContainers": {
       "activitybar": [
@@ -49,55 +54,55 @@
       "agentContext": [
         {
           "id": "agentContext.summary",
-          "name": "Summary",
+          "name": "%view.summary%",
           "type": "webview",
           "icon": "resources/icon.svg"
         },
         {
           "id": "agentContext.skills",
-          "name": "Skills",
+          "name": "%view.skills%",
           "type": "webview",
           "icon": "resources/icon.svg"
         },
         {
           "id": "agentContext.rules",
-          "name": "Rules & Instructions",
+          "name": "%view.rules%",
           "type": "webview",
           "icon": "resources/icon.svg"
         },
         {
           "id": "agentContext.agents",
-          "name": "Agents",
+          "name": "%view.agents%",
           "type": "webview",
           "icon": "resources/icon.svg"
         },
         {
           "id": "agentContext.mcp",
-          "name": "MCP Servers",
+          "name": "%view.mcp%",
           "type": "webview",
           "icon": "resources/icon.svg"
         },
         {
           "id": "agentContext.commands",
-          "name": "Commands",
+          "name": "%view.commands%",
           "type": "webview",
           "icon": "resources/icon.svg"
         },
         {
           "id": "agentContext.plugins",
-          "name": "Plugins",
+          "name": "%view.plugins%",
           "type": "webview",
           "icon": "resources/icon.svg"
         },
         {
           "id": "agentContext.health",
-          "name": "Health",
+          "name": "%view.health%",
           "type": "webview",
           "icon": "resources/icon.svg"
         },
         {
           "id": "agentContext.applicability",
-          "name": "Applicability",
+          "name": "%view.applicability%",
           "type": "webview",
           "icon": "resources/icon.svg"
         }
@@ -106,18 +111,18 @@
     "commands": [
       {
         "command": "agentContext.refresh",
-        "title": "Refresh",
+        "title": "%command.refresh%",
         "category": "Agent Context",
         "icon": "$(refresh)"
       },
       {
         "command": "agentContext.showApplicability",
-        "title": "Show Applicability",
+        "title": "%command.showApplicability%",
         "category": "Agent Context"
       },
       {
         "command": "agentContext.openSettings",
-        "title": "Open Settings",
+        "title": "%command.openSettings%",
         "category": "Agent Context",
         "icon": "$(gear)"
       }
@@ -132,19 +137,19 @@
       ]
     },
     "configuration": {
-      "title": "Agent Context",
+      "title": "%config.title%",
       "properties": {
         "agentContext.agentsRoot": {
           "type": "string",
           "default": "",
           "scope": "machine-overridable",
-          "markdownDescription": "Canonical agent configuration directory. Leave empty to use `~/.agents`."
+          "markdownDescription": "%config.agentsRoot%"
         },
         "agentContext.showThirdPartySkills": {
           "type": "boolean",
           "default": true,
           "scope": "window",
-          "markdownDescription": "Also list skills discovered from third-party locations such as `~/.copilot/skills` and `~/.claude/skills`."
+          "markdownDescription": "%config.showThirdPartySkills%"
         },
         "agentContext.enabledApps": {
           "type": "array",
@@ -170,7 +175,7 @@
             "copilot"
           ],
           "scope": "window",
-          "markdownDescription": "Applications shown in the Applicability view and in entity tooltips."
+          "markdownDescription": "%config.enabledApps%"
         }
       }
     }
@@ -186,17 +191,27 @@
     "typecheck": "tsc --noEmit",
     "check:registry": "node scripts/check-registry.mjs",
     "check": "npm run lint && npm run typecheck && npm run check:registry",
+    "l10n:extract": "npx @vscode/l10n-dev export --outDir ./l10n ./src",
     "test": "tsc -p tsconfig.test.json && node --test \"out/test/*.test.js\"",
+    "pretest:integration": "npm run build:prod && tsc -p tsconfig.test.json",
+    "test:integration": "vscode-test",
     "vsix": "vsce package",
     "vsix:publish": "vsce publish"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.14",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^22.20.4",
     "@types/vscode": "^1.85.0",
+    "@vscode/test-cli": "^0.0.15",
+    "@vscode/test-electron": "^3.1.0",
     "@vscode/vsce": "^3.2.1",
     "esbuild": "^0.28.2",
     "typescript": "^5.5.4",
     "yaml": "^2.8.1"
+  },
+  "overrides": {
+    "diff": "^9.0.0",
+    "serialize-javascript": "^7.1.2"
   }
 }

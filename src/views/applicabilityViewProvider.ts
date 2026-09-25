@@ -1,10 +1,28 @@
-import type * as vscode from "vscode";
+import * as vscode from "vscode";
 import { enabledApps } from "../config";
 import { buildEffective } from "../discovery/merge";
 import { APPS } from "../model/apps";
 import type { ContextSnapshot, Scope } from "../model/types";
 import type { ContextService } from "../services/contextService";
-import { getApplicabilityHtml } from "./webview/applicabilityHtml";
+import {
+  type ApplicabilityStrings,
+  getApplicabilityHtml,
+} from "./webview/applicabilityHtml";
+
+function applicabilityStrings(): ApplicabilityStrings {
+  return {
+    scopeMatrix: vscode.l10n.t("Scope matrix"),
+    applicationMatrix: vscode.l10n.t("Application matrix"),
+    entity: vscode.l10n.t("Entity"),
+    total: vscode.l10n.t("Total"),
+    defined: vscode.l10n.t("defined"),
+    shadowed: vscode.l10n.t("shadowed"),
+    absent: vscode.l10n.t("absent"),
+    nothing: vscode.l10n.t("Nothing to show."),
+    rows: vscode.l10n.t("rows"),
+    applications: vscode.l10n.t("applications"),
+  };
+}
 
 interface ApplicabilityRow {
   category: string;
@@ -53,8 +71,11 @@ export class ApplicabilityViewProvider implements vscode.WebviewViewProvider {
 
   resolveWebviewView(view: vscode.WebviewView): void {
     this.view = view;
-    view.webview.options = { enableScripts: true };
-    view.webview.html = getApplicabilityHtml(view.webview);
+    view.webview.options = { enableScripts: true, localResourceRoots: [] };
+    view.webview.html = getApplicabilityHtml(
+      view.webview,
+      applicabilityStrings(),
+    );
     view.webview.onDidReceiveMessage((message: { type?: string }) => {
       if (message?.type === "ready") {
         this.postState();

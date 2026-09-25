@@ -1,5 +1,18 @@
 import type * as vscode from "vscode";
 
+export interface ApplicabilityStrings {
+  scopeMatrix: string;
+  applicationMatrix: string;
+  entity: string;
+  total: string;
+  defined: string;
+  shadowed: string;
+  absent: string;
+  nothing: string;
+  rows: string;
+  applications: string;
+}
+
 function createNonce(): string {
   const chars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -10,7 +23,10 @@ function createNonce(): string {
   return text;
 }
 
-export function getApplicabilityHtml(_webview: vscode.Webview): string {
+export function getApplicabilityHtml(
+  _webview: vscode.Webview,
+  strings: ApplicabilityStrings,
+): string {
   const nonce = createNonce();
   const csp = [
     "default-src 'none'",
@@ -35,9 +51,21 @@ export function getApplicabilityHtml(_webview: vscode.Webview): string {
     color: var(--vscode-foreground);
     background: transparent;
   }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
   .summary { opacity: 0.7; margin: 0 0 10px; }
   .group-title {
-    padding: 10px 2px 5px;
+    margin: 10px 0 5px;
+    padding: 0 2px;
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
@@ -52,6 +80,7 @@ export function getApplicabilityHtml(_webview: vscode.Webview): string {
     overflow: auto;
     max-height: 45vh;
   }
+  .card:focus-visible { outline: 2px solid var(--vscode-focusBorder); outline-offset: -1px; }
   table { border-collapse: collapse; width: 100%; }
   th, td {
     padding: 3px 8px;
@@ -84,23 +113,32 @@ export function getApplicabilityHtml(_webview: vscode.Webview): string {
 </style>
 </head>
 <body>
-<div class="summary" id="summary"></div>
+<main>
+  <div class="summary" id="summary" role="status" aria-live="polite"></div>
 
-<div class="group-title">Scope matrix <span class="hint">+ defined &middot; \u2212 shadowed &middot; \u00b7 absent</span></div>
-<div class="card"><table id="scope">
-  <thead><tr id="scopeHead"></tr></thead>
-  <tbody id="scopeBody"><tr><td class="empty">Loading...</td></tr></tbody>
-</table></div>
+  <h2 class="group-title">${strings.scopeMatrix} <span class="hint">${strings.defined} &middot; \u2212 ${strings.shadowed} &middot; \u00b7 ${strings.absent}</span></h2>
+  <div class="card" role="region" tabindex="0" aria-label="${strings.scopeMatrix}">
+    <table id="scope">
+      <caption class="visually-hidden">${strings.scopeMatrix}</caption>
+      <thead><tr id="scopeHead"></tr></thead>
+      <tbody id="scopeBody"><tr><td class="empty">${strings.nothing}</td></tr></tbody>
+    </table>
+  </div>
 
-<div class="group-title">Application matrix</div>
-<div class="card"><table id="matrix">
-  <thead><tr id="head"></tr></thead>
-  <tbody id="body"><tr><td class="empty">Loading...</td></tr></tbody>
-  <tfoot><tr id="foot"></tr></tfoot>
-</table></div>
+  <h2 class="group-title">${strings.applicationMatrix}</h2>
+  <div class="card" role="region" tabindex="0" aria-label="${strings.applicationMatrix}">
+    <table id="matrix">
+      <caption class="visually-hidden">${strings.applicationMatrix}</caption>
+      <thead><tr id="head"></tr></thead>
+      <tbody id="body"><tr><td class="empty">${strings.nothing}</td></tr></tbody>
+      <tfoot><tr id="foot"></tr></tfoot>
+    </table>
+  </div>
+</main>
 
 <script nonce="${nonce}">
   const vscode = acquireVsCodeApi();
+  const strings = ${JSON.stringify(strings)};
   const summary = document.getElementById("summary");
   const scopeHead = document.getElementById("scopeHead");
   const scopeBody = document.getElementById("scopeBody");
@@ -124,42 +162,50 @@ export function getApplicabilityHtml(_webview: vscode.Webview): string {
     const td = document.createElement("td");
     td.className = "col";
     const span = document.createElement("span");
+    let label;
     if (symbol === "+") {
       span.className = "plus";
       span.textContent = "+";
+      label = strings.defined;
     } else if (symbol === "-") {
       span.className = "minus";
       span.textContent = "\\u2212";
+      label = strings.shadowed;
     } else {
       span.className = "dot";
       span.textContent = "\\u00b7";
+      label = strings.absent;
     }
+    span.setAttribute("role", "img");
+    span.setAttribute("aria-label", label);
     td.appendChild(span);
     return td;
   }
 
-  function headerRow(target, columns, firstLabel) {
+  function headerRow(target, columns) {
     target.textContent = "";
     const first = document.createElement("th");
-    first.textContent = firstLabel;
+    first.scope = "col";
+    first.textContent = strings.entity;
     target.appendChild(first);
     for (const column of columns) {
       const th = document.createElement("th");
       th.className = "col";
+      th.scope = "col";
       th.textContent = column;
       target.appendChild(th);
     }
   }
 
   function renderScope(state) {
-    headerRow(scopeHead, state.scopeColumns, "Entity");
+    headerRow(scopeHead, state.scopeColumns);
     scopeBody.textContent = "";
     if (state.scopeRows.length === 0) {
       const tr = document.createElement("tr");
       const td = document.createElement("td");
       td.colSpan = state.scopeColumns.length + 1;
       td.className = "empty";
-      td.textContent = "Nothing to show.";
+      td.textContent = strings.nothing;
       tr.appendChild(td);
       scopeBody.appendChild(tr);
       return;
@@ -175,14 +221,14 @@ export function getApplicabilityHtml(_webview: vscode.Webview): string {
   }
 
   function renderApps(state) {
-    headerRow(head, state.columns, "Entity");
+    headerRow(head, state.columns);
     body.textContent = "";
     if (state.rows.length === 0) {
       const tr = document.createElement("tr");
       const td = document.createElement("td");
       td.colSpan = state.columns.length + 1;
       td.className = "empty";
-      td.textContent = "Nothing to show.";
+      td.textContent = strings.nothing;
       tr.appendChild(td);
       body.appendChild(tr);
     }
@@ -197,7 +243,7 @@ export function getApplicabilityHtml(_webview: vscode.Webview): string {
 
     foot.textContent = "";
     const label = document.createElement("td");
-    label.textContent = "Total";
+    label.textContent = strings.total;
     foot.appendChild(label);
     for (const total of state.totals) {
       const td = document.createElement("td");
@@ -214,9 +260,12 @@ export function getApplicabilityHtml(_webview: vscode.Webview): string {
     const state = event.data.state;
     summary.textContent =
       state.rows.length +
-      " rows \\u00b7 " +
+      " " +
+      strings.rows +
+      " \\u00b7 " +
       state.columns.length +
-      " applications";
+      " " +
+      strings.applications;
     renderScope(state);
     renderApps(state);
   });

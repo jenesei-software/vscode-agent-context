@@ -116,6 +116,19 @@ Install **Agent Context** from the Visual Studio Marketplace, or run
 | `Agent Context: Show Applicability` | Focus the Applicability view. |
 | `Agent Context: Open Settings` | Open the extension settings. |
 
+## Security
+
+- The extension is **read-only** except for enabling/disabling entities, and it
+  never runs scripts or shell commands.
+- It only modifies entities from the current scan and only inside managed roots
+  (`~/.agents`, the workspace and the known global config directories), with
+  symlinks resolved via `realpath`.
+- `servers.yaml` is written atomically (temporary file + rename).
+- In an **untrusted workspace** the panel is read-only: enabling and disabling
+  is unavailable.
+- It reads only environment variable **names**, never values.
+- File reads are capped at 4 MB.
+
 ## Architecture
 
 ```text

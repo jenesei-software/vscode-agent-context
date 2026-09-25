@@ -20,8 +20,8 @@ export const PROJECT_RULE_CANDIDATES = [
 ];
 
 export const GLOBAL_RULE_CANDIDATES = [
-  ".agents/rules/git-commits.md",
-  ".agents/rules/commit-rules.md",
+  "rules/git-commits.md",
+  "rules/commit-rules.md",
 ];
 
 interface RuleCandidate {

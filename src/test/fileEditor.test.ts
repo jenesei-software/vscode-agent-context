@@ -37,6 +37,19 @@ test("setFileEnabled works for an agent file", async () => {
   assert.match(await readFile(file, "utf8"), /demo/);
 });
 
+test("setFileEnabled refuses a file that exists in both states", async () => {
+  const directory = await mkdtemp(
+    path.join(tmpdir(), "agent-context-conflict-"),
+  );
+  const file = path.join(directory, "SKILL.md");
+  await writeFile(file, "active", "utf8");
+  await writeFile(`${file}.disabled`, "parked", "utf8");
+
+  const result = await setFileEnabled(file, false);
+  assert.equal(result.ok, false);
+  assert.match(result.error ?? "", /Both/);
+});
+
 test("findSkillReferences finds agents that reference a skill", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "agent-context-agents-"));
   const agents = path.join(root, "agents");

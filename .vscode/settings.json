@@ -15,6 +15,5 @@
   },
   "github.copilot.chat.commitMessageGeneration.instructions": [
     { "file": ".agents/rules/git-commits.md" }
-  ],
-  "nvmManager.autoSwitch": true
+  ]
 }
