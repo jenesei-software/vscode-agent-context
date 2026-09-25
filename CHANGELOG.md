@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Global commit-rule candidates were looked up under `~/.agents/.agents/rules`
   (double prefix); they now resolve to `~/.agents/rules`.
 - Removed a leftover `nvmManager.autoSwitch` setting from `.vscode/settings.json`.
+- `tsconfig.test.json` now uses `Node16` module resolution (module10 was removed
+  in TypeScript 7), and `npm test` clears `out/` first so stale compiled tests
+  cannot run.
 
 ### Added
 

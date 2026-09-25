@@ -192,7 +192,7 @@
     "check:registry": "node scripts/check-registry.mjs",
     "check": "npm run lint && npm run typecheck && npm run check:registry",
     "l10n:extract": "npx @vscode/l10n-dev export --outDir ./l10n ./src",
-    "test": "tsc -p tsconfig.test.json && node --test \"out/test/*.test.js\"",
+    "test": "node -e \"require('node:fs').rmSync('out',{recursive:true,force:true})\" && tsc -p tsconfig.test.json && node --test \"out/test/*.test.js\"",
     "pretest:integration": "npm run build:prod && tsc -p tsconfig.test.json",
     "test:integration": "vscode-test",
     "vsix": "vsce package",
