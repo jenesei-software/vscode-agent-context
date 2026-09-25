@@ -45,6 +45,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Renamed the extension id to `vscode-agent-context` because `agent-context`
+  was already taken on the Marketplace by another publisher; the display name
+  stays **Agent Context**.
 - Unified every view into the compact card style: **Rules**, **Agents**,
   **MCP**, **Commands** and **Plugins** are now webviews with a toggle, hover
   tooltip and open/reveal actions, like **Skills**.

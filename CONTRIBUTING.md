@@ -43,7 +43,7 @@ You can also install a build with:
 
 ```powershell
 npm run vsix
-code --install-extension agent-context-0.0.1.vsix
+code --install-extension vscode-agent-context-1.0.0.vsix
 ```
 
 ## Project layout

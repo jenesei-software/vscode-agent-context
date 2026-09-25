@@ -64,11 +64,11 @@ jobs:
           git push origin "v$VERSION"
 
       - name: Package extension
-        run: npx @vscode/vsce package --out "agent-context-$VERSION.vsix"
+        run: npx @vscode/vsce package --out "vscode-agent-context-$VERSION.vsix"
 
       - name: Publish to Visual Studio Marketplace
         if: env.VSCE_PAT != ''
-        run: npx @vscode/vsce publish --packagePath "agent-context-$VERSION.vsix"
+        run: npx @vscode/vsce publish --packagePath "vscode-agent-context-$VERSION.vsix"
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3
@@ -76,4 +76,4 @@ jobs:
           tag_name: v${{ env.VERSION }}
           name: Agent Context v${{ env.VERSION }}
           generate_release_notes: true
-          files: agent-context-${{ env.VERSION }}.vsix
+          files: vscode-agent-context-${{ env.VERSION }}.vsix

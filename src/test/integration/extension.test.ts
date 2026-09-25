@@ -1,7 +1,7 @@
 import * as assert from "node:assert";
 import * as vscode from "vscode";
 
-const EXTENSION_ID = "jenesei-software.agent-context";
+const EXTENSION_ID = "jenesei-software.vscode-agent-context";
 
 suite("Agent Context extension", () => {
   test("is present and activates", async () => {

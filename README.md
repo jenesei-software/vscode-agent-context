@@ -1,6 +1,6 @@
 # Agent Context
 
-[![Marketplace](https://img.shields.io/badge/Marketplace-Agent%20Context-007ACC?logo=visualstudiocode&logoColor=white)](https://marketplace.visualstudio.com/items?itemName=jenesei-software.agent-context)
+[![Marketplace](https://img.shields.io/badge/Marketplace-Agent%20Context-007ACC?logo=visualstudiocode&logoColor=white)](https://marketplace.visualstudio.com/items?itemName=jenesei-software.vscode-agent-context)
 [![Version](https://img.shields.io/badge/version-1.0.0-2ea44f)](CHANGELOG.md)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)](package.json)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
