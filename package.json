@@ -48,38 +48,51 @@
     "views": {
       "agentContext": [
         {
-          "id": "agentContext.effective",
-          "name": "Effective",
+          "id": "agentContext.summary",
+          "name": "Summary",
+          "type": "webview",
           "icon": "resources/agent-context.svg"
         },
         {
           "id": "agentContext.skills",
           "name": "Skills",
+          "type": "webview",
           "icon": "resources/agent-context.svg"
         },
         {
           "id": "agentContext.rules",
           "name": "Rules & Instructions",
+          "type": "webview",
           "icon": "resources/agent-context.svg"
         },
         {
           "id": "agentContext.agents",
           "name": "Agents",
+          "type": "webview",
           "icon": "resources/agent-context.svg"
         },
         {
           "id": "agentContext.mcp",
           "name": "MCP Servers",
+          "type": "webview",
           "icon": "resources/agent-context.svg"
         },
         {
           "id": "agentContext.commands",
-          "name": "Commands & Plugins",
+          "name": "Commands",
+          "type": "webview",
+          "icon": "resources/agent-context.svg"
+        },
+        {
+          "id": "agentContext.plugins",
+          "name": "Plugins",
+          "type": "webview",
           "icon": "resources/agent-context.svg"
         },
         {
           "id": "agentContext.health",
           "name": "Health",
+          "type": "webview",
           "icon": "resources/agent-context.svg"
         },
         {
@@ -96,52 +109,6 @@
         "title": "Refresh",
         "category": "Agent Context",
         "icon": "$(refresh)"
-      },
-      {
-        "command": "agentContext.filter",
-        "title": "Filter...",
-        "category": "Agent Context",
-        "icon": "$(filter)"
-      },
-      {
-        "command": "agentContext.clearFilter",
-        "title": "Clear Filter",
-        "category": "Agent Context"
-      },
-      {
-        "command": "agentContext.openFile",
-        "title": "Open File",
-        "category": "Agent Context"
-      },
-      {
-        "command": "agentContext.revealFile",
-        "title": "Reveal in Explorer",
-        "category": "Agent Context"
-      },
-      {
-        "command": "agentContext.openCanonical",
-        "title": "Open Canonical Source",
-        "category": "Agent Context"
-      },
-      {
-        "command": "agentContext.whyVisible",
-        "title": "Why Is This Visible?",
-        "category": "Agent Context"
-      },
-      {
-        "command": "agentContext.copyName",
-        "title": "Copy Name",
-        "category": "Agent Context"
-      },
-      {
-        "command": "agentContext.copyEnvName",
-        "title": "Copy Environment Variable Name",
-        "category": "Agent Context"
-      },
-      {
-        "command": "agentContext.toggleMcpEnabled",
-        "title": "Toggle Enabled",
-        "category": "Agent Context"
       },
       {
         "command": "agentContext.runSyncAll",
@@ -166,9 +133,8 @@
       },
       {
         "command": "agentContext.showApplicability",
-        "title": "Show Applicability Matrix",
-        "category": "Agent Context",
-        "icon": "$(table)"
+        "title": "Show Applicability",
+        "category": "Agent Context"
       },
       {
         "command": "agentContext.openSettings",
@@ -180,86 +146,14 @@
     "menus": {
       "view/title": [
         {
-          "command": "agentContext.filter",
-          "when": "view =~ /^agentContext\\.(effective|skills|rules|agents|mcp|commands|health)$/",
+          "command": "agentContext.runSyncAll",
+          "when": "view =~ /^agentContext\\./",
           "group": "navigation@1"
         },
         {
-          "command": "agentContext.showApplicability",
-          "when": "view =~ /^agentContext\\.(effective|skills|rules|agents|mcp|commands|health)$/",
-          "group": "navigation@2"
-        },
-        {
           "command": "agentContext.refresh",
-          "when": "view =~ /^agentContext\\.(effective|skills|rules|agents|mcp|commands|health)$/",
-          "group": "navigation@3"
-        }
-      ],
-      "view/item/context": [
-        {
-          "command": "agentContext.openFile",
-          "when": "viewItem =~ /agentContext\\.openable/",
-          "group": "inline@1"
-        },
-        {
-          "command": "agentContext.whyVisible",
-          "when": "viewItem =~ /agentContext\\.provenance/",
-          "group": "1_inspect@1"
-        },
-        {
-          "command": "agentContext.openCanonical",
-          "when": "viewItem =~ /agentContext\\.generated/",
-          "group": "1_inspect@2"
-        },
-        {
-          "command": "agentContext.revealFile",
-          "when": "viewItem =~ /agentContext\\.openable/",
-          "group": "1_inspect@3"
-        },
-        {
-          "command": "agentContext.copyName",
-          "when": "viewItem =~ /agentContext\\.named/",
-          "group": "2_copy@1"
-        },
-        {
-          "command": "agentContext.copyEnvName",
-          "when": "viewItem =~ /agentContext\\.mcp/",
-          "group": "2_copy@2"
-        },
-        {
-          "command": "agentContext.toggleMcpEnabled",
-          "when": "viewItem =~ /agentContext\\.mcp/",
-          "group": "3_manage@1"
-        }
-      ],
-      "commandPalette": [
-        {
-          "command": "agentContext.openFile",
-          "when": "false"
-        },
-        {
-          "command": "agentContext.revealFile",
-          "when": "false"
-        },
-        {
-          "command": "agentContext.openCanonical",
-          "when": "false"
-        },
-        {
-          "command": "agentContext.whyVisible",
-          "when": "false"
-        },
-        {
-          "command": "agentContext.copyName",
-          "when": "false"
-        },
-        {
-          "command": "agentContext.copyEnvName",
-          "when": "false"
-        },
-        {
-          "command": "agentContext.toggleMcpEnabled",
-          "when": "false"
+          "when": "view =~ /^agentContext\\./",
+          "group": "navigation@2"
         }
       ]
     },
@@ -308,7 +202,7 @@
             "copilot"
           ],
           "scope": "window",
-          "markdownDescription": "Applications to model in the applicability matrix and app badges."
+          "markdownDescription": "Applications shown in the Applicability view and in entity tooltips."
         },
         "agentContext.mcpAutoSync": {
           "type": "boolean",

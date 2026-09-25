@@ -12,6 +12,7 @@ function skill(partial: Partial<SkillEntity>): SkillEntity {
     path: partial.path ?? "/global/SKILL.md",
     directory: "/global",
     valid: true,
+    disabled: false,
     apps: [],
     issues: [],
     duplicates: [],

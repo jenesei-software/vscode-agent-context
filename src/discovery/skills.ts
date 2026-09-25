@@ -39,8 +39,16 @@ export async function scanSkills(
       if (!entry.directory || entry.name.startsWith(".")) {
         continue;
       }
-      const skillFile = path.join(entry.path, "SKILL.md");
-      const raw = await readText(skillFile);
+      const activeFile = path.join(entry.path, "SKILL.md");
+      const disabledFile = path.join(entry.path, "SKILL.md.disabled");
+      let disabled = false;
+      let raw = await readText(activeFile);
+      if (raw === undefined) {
+        raw = await readText(disabledFile);
+        if (raw !== undefined) {
+          disabled = true;
+        }
+      }
       if (raw === undefined) {
         issues.push({
           severity: "warning",
@@ -56,8 +64,9 @@ export async function scanSkills(
         context,
         entry.name,
         entry.path,
-        skillFile,
+        activeFile,
         raw,
+        disabled,
         lock,
       );
       collected.push(entity);
@@ -76,6 +85,7 @@ function buildSkill(
   directory: string,
   file: string,
   raw: string,
+  disabled: boolean,
   lock: LockFile,
 ): SkillEntity {
   const fm = parseFrontmatter(raw);
@@ -139,6 +149,7 @@ function buildSkill(
     directory,
     description,
     valid: issues.every((issue) => issue.severity !== "error"),
+    disabled,
     apps: computeApps("skills", file, context.apps, context.workspaceRoot),
     issues,
     lock: lockFor(lock, name),

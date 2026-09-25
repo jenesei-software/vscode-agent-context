@@ -56,6 +56,8 @@ export interface SkillEntity extends EntityBase {
   directory: string;
   description?: string;
   valid: boolean;
+  /** True when the skill is parked as `SKILL.md.disabled`. */
+  disabled: boolean;
   lock?: SkillLockEntry;
   /** Absolute path of the higher-priority entity that shadows this one. */
   shadowedBy?: string;
@@ -67,6 +69,7 @@ export interface RuleEntity extends EntityBase {
   category: "rules";
   winner: boolean;
   order: number;
+  disabled: boolean;
   duplicates: string[];
 }
 
@@ -83,6 +86,7 @@ export interface AgentEntity extends EntityBase {
   tools: string[];
   userInvocable?: boolean;
   codex?: AgentCodexBlock;
+  disabled: boolean;
   /** Generated Codex TOML path, when present. */
   generatedPath?: string;
   generated?: {
@@ -124,12 +128,14 @@ export interface McpEntity extends EntityBase {
 export interface CommandEntity extends EntityBase {
   category: "commands";
   description?: string;
+  disabled: boolean;
   generatedParts: string[];
 }
 
 export interface PluginEntity extends EntityBase {
   category: "plugins";
   description?: string;
+  disabled: boolean;
 }
 
 export type AnyEntity =

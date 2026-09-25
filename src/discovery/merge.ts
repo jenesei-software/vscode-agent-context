@@ -19,7 +19,7 @@ export function buildEffective(snapshot: ContextSnapshot): EffectiveEntry[] {
   const entries: EffectiveEntry[] = [];
 
   for (const skill of snapshot.skills) {
-    if (skill.shadowedBy) {
+    if (skill.shadowedBy || skill.disabled) {
       continue;
     }
     entries.push({
@@ -35,7 +35,7 @@ export function buildEffective(snapshot: ContextSnapshot): EffectiveEntry[] {
   }
 
   for (const rule of snapshot.rules) {
-    if (!rule.winner) {
+    if (!rule.winner || rule.disabled) {
       continue;
     }
     entries.push({
@@ -51,7 +51,7 @@ export function buildEffective(snapshot: ContextSnapshot): EffectiveEntry[] {
   }
 
   for (const agent of snapshot.agents) {
-    if (agent.shadowedBy) {
+    if (agent.shadowedBy || agent.disabled) {
       continue;
     }
     entries.push({
@@ -67,7 +67,7 @@ export function buildEffective(snapshot: ContextSnapshot): EffectiveEntry[] {
   }
 
   for (const server of snapshot.mcp) {
-    if (server.overriddenBy) {
+    if (server.overriddenBy || server.enabled === false) {
       continue;
     }
     entries.push({
@@ -83,7 +83,7 @@ export function buildEffective(snapshot: ContextSnapshot): EffectiveEntry[] {
 
   const seenCommands = new Set<string>();
   for (const command of rankByName(snapshot.commands)) {
-    if (seenCommands.has(command.name)) {
+    if (command.disabled || seenCommands.has(command.name)) {
       continue;
     }
     seenCommands.add(command.name);
@@ -99,6 +99,9 @@ export function buildEffective(snapshot: ContextSnapshot): EffectiveEntry[] {
   }
 
   for (const plugin of snapshot.plugins) {
+    if (plugin.disabled) {
+      continue;
+    }
     entries.push({
       category: "plugins",
       name: plugin.name,

@@ -12,6 +12,7 @@
     "src/parse/**/*.ts",
     "src/model/**/*.ts",
     "src/discovery/**/*.ts",
+    "src/services/**/*.ts",
     "src/test/**/*.ts"
   ],
   "exclude": ["node_modules", "out", "dist"]

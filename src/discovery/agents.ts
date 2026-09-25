@@ -31,18 +31,27 @@ export async function scanAgents(
 
   for (const directory of directories) {
     for (const entry of await listEntries(directory)) {
-      if (entry.directory || !entry.name.endsWith(".agent.md")) {
+      if (entry.directory) {
         continue;
       }
+      const match = /^(.+?)\.agent\.md(\.disabled)?$/.exec(entry.name);
+      if (!match) {
+        continue;
+      }
+      const disabled = match[2] !== undefined;
+      const canonical = disabled
+        ? entry.path.slice(0, -".disabled".length)
+        : entry.path;
       const raw = await readText(entry.path);
       if (raw === undefined) {
         continue;
       }
       const entity = await buildAgent(
         context,
-        entry.name,
-        entry.path,
+        match[1],
+        canonical,
         raw,
+        disabled,
         issues,
       );
       agents.push(entity);
@@ -58,13 +67,13 @@ export async function scanAgents(
 
 async function buildAgent(
   context: ScanContext,
-  fileName: string,
+  fallbackName: string,
   filePath: string,
   raw: string,
+  disabled: boolean,
   issues: HealthIssue[],
 ): Promise<AgentEntity> {
   const fm = parseFrontmatter(raw);
-  const fallbackName = fileName.replace(/\.agent\.md$/, "");
   const name = asString(fm.data.name) ?? fallbackName;
   const description = asString(fm.data.description);
   const tools = asStringArray(fm.data.tools);
@@ -125,6 +134,7 @@ async function buildAgent(
     tools,
     userInvocable,
     codex,
+    disabled,
     duplicates: [],
     apps: computeApps("agents", filePath, context.apps, context.workspaceRoot),
     issues: localIssues,

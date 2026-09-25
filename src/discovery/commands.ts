@@ -22,30 +22,38 @@ export async function scanCommands(
       if (entry.directory) {
         continue;
       }
-      if (!entry.name.endsWith(".md")) {
+      const disabled = entry.name.endsWith(".disabled");
+      const base = disabled
+        ? entry.name.slice(0, -".disabled".length)
+        : entry.name;
+      if (!base.endsWith(".md")) {
         continue;
       }
-      if (seen.has(entry.path)) {
+      const file = disabled
+        ? entry.path.slice(0, -".disabled".length)
+        : entry.path;
+      if (seen.has(file)) {
         continue;
       }
-      seen.add(entry.path);
+      seen.add(file);
 
       const raw = await readText(entry.path);
       const fm = raw === undefined ? undefined : parseFrontmatter(raw);
-      const name = entry.name.replace(/\.prompt\.md$/, "").replace(/\.md$/, "");
+      const name = base.replace(/\.prompt\.md$/, "").replace(/\.md$/, "");
       const description = fm ? asString(fm.data.description) : undefined;
 
       commands.push({
-        id: `commands:${entry.path}`,
+        id: `commands:${file}`,
         name,
         category: "commands",
-        scope: scopeFor(context, entry.path),
-        path: entry.path,
+        scope: scopeFor(context, file),
+        path: file,
         description,
+        disabled,
         generatedParts: [],
         apps: computeApps(
           "commands",
-          entry.path,
+          file,
           context.apps,
           context.workspaceRoot,
         ),
@@ -67,23 +75,29 @@ export async function scanPlugins(
 
   for (const directory of candidateDirs(context, "plugins")) {
     for (const entry of await listEntries(directory)) {
-      if (entry.directory || !/\.(ts|js|mjs)$/.test(entry.name)) {
+      if (entry.directory) {
         continue;
       }
+      const disabled = entry.name.endsWith(".disabled");
+      const base = disabled
+        ? entry.name.slice(0, -".disabled".length)
+        : entry.name;
+      if (!/\.(ts|js|mjs)$/.test(base)) {
+        continue;
+      }
+      const file = disabled
+        ? entry.path.slice(0, -".disabled".length)
+        : entry.path;
       const raw = await readText(entry.path);
       plugins.push({
-        id: `plugins:${entry.path}`,
-        name: entry.name.replace(/\.(ts|js|mjs)$/, ""),
+        id: `plugins:${file}`,
+        name: base.replace(/\.(ts|js|mjs)$/, ""),
         category: "plugins",
-        scope: scopeFor(context, entry.path),
-        path: entry.path,
+        scope: scopeFor(context, file),
+        path: file,
         description: firstComment(raw),
-        apps: computeApps(
-          "plugins",
-          entry.path,
-          context.apps,
-          context.workspaceRoot,
-        ),
+        disabled,
+        apps: computeApps("plugins", file, context.apps, context.workspaceRoot),
         issues,
       });
     }
@@ -106,6 +120,7 @@ async function attachGenerated(
         scope: "global",
         path: raw,
         description: `Command entries managed by the ${app.label} sync script.`,
+        disabled: false,
         generatedParts: [raw],
         apps: [app.id],
         issues: [],

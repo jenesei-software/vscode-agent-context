@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readdir, readFile, stat } from "node:fs/promises";
+import { readdir, readFile, rename, stat } from "node:fs/promises";
 import * as path from "node:path";
 
 export async function pathExists(target: string): Promise<boolean> {
@@ -33,6 +33,13 @@ export async function readText(target: string): Promise<string | undefined> {
   } catch {
     return undefined;
   }
+}
+
+export async function renameFile(
+  source: string,
+  destination: string,
+): Promise<void> {
+  await rename(source, destination);
 }
 
 export async function listDir(target: string): Promise<string[]> {

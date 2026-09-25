@@ -7,11 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Unified every view into the compact card style: **Rules**, **Agents**,
+  **MCP**, **Commands** and **Plugins** are now webviews with a toggle, hover
+  tooltip and open/reveal actions, like **Skills**.
+- Split **Commands & Plugins** into separate **Commands** and **Plugins** views.
+- Removed the tree views and the name filter; the panel is webview-only.
+- Enable/disable now works for skills, agents, rules, commands and plugins by
+  renaming the managed file to `*.disabled` (reversible). MCP keeps the
+  `enabled` flag in `servers.yaml`.
+- Restyled **Applicability** into the compact card style (scope matrix and
+  application matrix).
+- Added a loading indicator to every webview.
+
 ## [0.0.1] - 2026-09-24
 
 ### Added
 
-- Effective, Skills, Rules & Instructions, Agents, MCP Servers, Commands &
+- Summary, Skills, Rules & Instructions, Agents, MCP Servers, Commands &
   Plugins and Health tree views in an Agent Context activity-bar container.
 - Global/project scope badges, shadowing and provenance with a "Why is this
   visible?" breakdown.

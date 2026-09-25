@@ -15,19 +15,24 @@ opencode, Claude, Copilot).
 
 ## Features
 
-- **Effective view** — the winning entity per category after applying shadowing
-  and precedence rules.
-- **Provenance** — for every entity: source path, scope badge, whether it wins
-  or is shadowed, and every file that defines the same name ("Why is this
-  visible?").
-- **Applicability matrix** — a webview table of entities (rows) against the
-  applications that discover them (columns).
+- **Summary** — the winning entity per category after applying shadowing and
+  precedence rules, so you can see what is actually connected to the project.
+- **Skills, Rules, Agents, MCP, Commands, Plugins** — compact card lists grouped
+  by scope (Project, Global (user), Third-party) with one toggle per entity, the
+  description in a hover tooltip and open/reveal actions on hover.
+- **Enable / disable** — disabling renames a managed file to `*.disabled`
+  (`SKILL.md.disabled`, `*.agent.md.disabled`, …), which hides it from every
+  application and is fully reversible; MCP servers flip `enabled` in
+  `servers.yaml`. The panel warns when an agent still references a disabled
+  skill.
+- **Applicability** — a compact scope matrix (Project / User / Third-party,
+  `+` defined, `−` shadowed, `·` absent) and an application matrix (entities
+  against the applications that discover them).
 - **Health / Diagnostics** — broken frontmatter, duplicate names, missing
   referenced skills, invalid YAML/JSONC/TOML, missing secret environment
   variables, generated Codex agents without a canonical source.
 - **Actions** — run `sync-all` / `sync-agents` / `sync-skills` / `sync-mcp`,
-  open canonical and generated files, copy names and environment variable names,
-  and toggle an MCP server's `enabled` flag.
+  open files, open generated Codex agents, and copy environment variable names.
 - **Live refresh** — file watchers on `~/.agents/**` and the workspace root.
 - **Secret safety** — only environment variable *names* are read and shown,
   never values; the panel reports whether each variable is set in the process.
@@ -36,7 +41,7 @@ opencode, Claude, Copilot).
 
 `~/.agents` is treated as the canonical source of truth. The extension reads it
 (and a set of project locations) without ever writing to generated files unless
-you explicitly run a sync or toggle an MCP server.
+you explicitly run a sync or toggle an entity.
 
 ### Scopes and overrides
 
@@ -85,8 +90,8 @@ Install **Agent Context** from the Visual Studio Marketplace, or run
 ## Getting started
 
 1. Open the **Agent Context** view in the Activity Bar.
-2. Expand **Effective** to see what actually applies in this workspace.
-3. Click any entity to open its source file.
+2. Expand **Summary** to see what actually applies in this workspace.
+3. Use the per-category lists to enable/disable entities and jump to their files.
 4. Use **Applicability** to see which applications pick up each entity.
 5. Check **Health** before trusting a skill or agent.
 
@@ -97,7 +102,7 @@ Install **Agent Context** from the Visual Studio Marketplace, or run
 | `agentContext.agentsRoot` | `""` | machine-overridable | Canonical directory. Empty uses `~/.agents`. |
 | `agentContext.allowScripts` | `true` | window | Run the canonical `sync-*.ps1` scripts from the panel. |
 | `agentContext.showThirdPartySkills` | `true` | window | Include `~/.copilot/skills` and `~/.claude/skills`. |
-| `agentContext.enabledApps` | all | window | Applications to model in the matrix and badges. |
+| `agentContext.enabledApps` | all | window | Applications shown in Applicability and in tooltips. |
 | `agentContext.mcpAutoSync` | `true` | window | Run `sync-mcp.ps1` after toggling a server's `enabled`. |
 
 ## Commands
@@ -105,15 +110,9 @@ Install **Agent Context** from the Visual Studio Marketplace, or run
 | Command | Description |
 | --- | --- |
 | `Agent Context: Refresh` | Re-scan canonical and project sources. |
-| `Agent Context: Filter...` | Filter entities by name. |
-| `Agent Context: Clear Filter` | Remove the active filter. |
-| `Agent Context: Why Is This Visible?` | Show the provenance of an entity. |
-| `Agent Context: Open Canonical Source` | Open the canonical source of a generated entity. |
-| `Agent Context: Copy Environment Variable Name` | Copy a secret variable name (never its value). |
-| `Agent Context: Toggle Enabled` | Toggle an MCP server in `servers.yaml`. |
 | `Agent Context: Synchronize Everything` | Run `sync-all.ps1`. |
 | `Agent Context: Synchronize Agents / Skills / MCP Servers` | Run the matching script. |
-| `Agent Context: Show Applicability Matrix` | Focus the applicability webview. |
+| `Agent Context: Show Applicability` | Focus the Applicability view. |
 | `Agent Context: Open Settings` | Open the extension settings. |
 
 ## Architecture
@@ -127,8 +126,8 @@ src/
 ├─ model/                  types + versioned application registry
 ├─ parse/                  YAML frontmatter, JSONC and TOML parsers
 ├─ discovery/              scanners (skills, rules, agents, mcp, commands, plugins) + merge
-├─ services/               context service, watcher, sync runner, MCP editor
-├─ views/                  tree providers, applicability webview, filter
+├─ services/               context service, watcher, sync runner, file/MCP editors
+├─ views/                  generic list webview, builders, applicability webview
 └─ test/                   node:test unit tests for the pure layers
 ```
 
@@ -139,7 +138,7 @@ The plan below is fixed here on purpose, so the scope stays explicit.
 ### v1 — inspection and actions (shipped in this repository)
 
 - Skills, Rules, Agents, MCP, Commands and Plugins across global and project
-  scopes, with provenance, shadowing and an **Effective** view.
+  scopes, with provenance, shadowing and a **Summary** view.
 - Seven-application model and the applicability webview.
 - Health diagnostics, status bar, live refresh, search/filter.
 - Actions: run sync scripts, open/reveal, copy names and environment variable
