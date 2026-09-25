@@ -1,7 +1,7 @@
 # Agent Context Manager
 
 [![Marketplace](https://img.shields.io/badge/Marketplace-Agent%20Context%20Manager-007ACC?logo=visualstudiocode&logoColor=white)](https://marketplace.visualstudio.com/items?itemName=jenesei-software.agent-context-manager)
-[![Version](https://img.shields.io/badge/version-1.0.1-2ea44f)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.0.2-2ea44f)](CHANGELOG.md)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-2ea44f)](package.json)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
