@@ -1,18 +1,18 @@
 {
-  "name": "vscode-agent-context",
-  "displayName": "Agent Context Studio",
+  "name": "agent-context-manager",
+  "displayName": "Agent Context Manager",
   "description": "See everything that shapes your AI agents in this project: skills, agents, rules, MCP servers and plugins, their scope, overrides and which applications pick them up.",
   "version": "1.0.1",
   "publisher": "jenesei-software",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jenesei-software/vscode-agent-context"
+    "url": "https://github.com/jenesei-software/vscode-agent-context-manager"
   },
   "bugs": {
-    "url": "https://github.com/jenesei-software/vscode-agent-context/issues"
+    "url": "https://github.com/jenesei-software/vscode-agent-context-manager/issues"
   },
-  "homepage": "https://github.com/jenesei-software/vscode-agent-context#readme",
+  "homepage": "https://github.com/jenesei-software/vscode-agent-context-manager#readme",
   "engines": {
     "vscode": "^1.85.0",
     "node": ">=22"
@@ -45,7 +45,7 @@
       "activitybar": [
         {
           "id": "agentContext",
-          "title": "Agent Context",
+          "title": "Agent Context Manager",
           "icon": "resources/icon.svg"
         }
       ]
@@ -112,18 +112,18 @@
       {
         "command": "agentContext.refresh",
         "title": "%command.refresh%",
-        "category": "Agent Context",
+        "category": "Agent Context Manager",
         "icon": "$(refresh)"
       },
       {
         "command": "agentContext.showApplicability",
         "title": "%command.showApplicability%",
-        "category": "Agent Context"
+        "category": "Agent Context Manager"
       },
       {
         "command": "agentContext.openSettings",
         "title": "%command.openSettings%",
-        "category": "Agent Context",
+        "category": "Agent Context Manager",
         "icon": "$(gear)"
       }
     ],

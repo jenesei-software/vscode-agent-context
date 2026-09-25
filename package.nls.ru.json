@@ -11,7 +11,7 @@
   "command.refresh": "Обновить",
   "command.showApplicability": "Показать применимость",
   "command.openSettings": "Открыть настройки",
-  "config.title": "Agent Context",
+  "config.title": "Agent Context Manager",
   "config.agentsRoot": "Канонический каталог конфигурации агентов. Пусто — использовать `~/.agents`.",
   "config.showThirdPartySkills": "Также показывать скиллы из сторонних мест, например `~/.copilot/skills` и `~/.claude/skills`.",
   "config.enabledApps": "Приложения, показываемые в «Применимости» и в подсказках сущностей."

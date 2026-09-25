@@ -25,7 +25,7 @@ export function registerCommands(
   register("agentContext.openSettings", () =>
     vscode.commands.executeCommand(
       "workbench.action.openSettings",
-      "@ext:jenesei-software.vscode-agent-context",
+      "@ext:jenesei-software.agent-context-manager",
     ),
   );
 }

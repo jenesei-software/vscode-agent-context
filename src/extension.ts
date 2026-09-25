@@ -43,7 +43,7 @@ const LIST_VIEWS: Array<{
 export async function activate(
   context: vscode.ExtensionContext,
 ): Promise<void> {
-  const output = vscode.window.createOutputChannel("Agent Context");
+  const output = vscode.window.createOutputChannel("Agent Context Manager");
   context.subscriptions.push(output);
 
   const service = new ContextService(() => ({
@@ -64,7 +64,7 @@ export async function activate(
     } catch (error) {
       output.appendLine((error as Error).message);
       vscode.window.showErrorMessage(
-        `Agent Context: ${(error as Error).message}`,
+        `Agent Context Manager: ${(error as Error).message}`,
       );
     }
   };

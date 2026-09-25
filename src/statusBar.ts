@@ -14,8 +14,8 @@ export class StatusBar implements vscode.Disposable {
 
   update(snapshot: ContextSnapshot | undefined): void {
     if (!snapshot) {
-      this.item.text = "$(symbol-namespace) Agent Context";
-      this.item.tooltip = "Agent Context: scanning...";
+      this.item.text = "$(symbol-namespace) Agent Context Manager";
+      this.item.tooltip = "Agent Context Manager: scanning...";
       this.item.show();
       return;
     }
@@ -30,7 +30,7 @@ export class StatusBar implements vscode.Disposable {
 
     this.item.text = `$(symbol-namespace) ${snapshot.skills.length} skills · ${snapshot.mcp.length} MCP · ${health}`;
     this.item.tooltip = [
-      "Agent Context",
+      "Agent Context Manager",
       `Skills: ${snapshot.skills.length}`,
       `Rules: ${snapshot.rules.length}`,
       `Agents: ${snapshot.agents.length}`,

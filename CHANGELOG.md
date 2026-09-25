@@ -45,9 +45,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Renamed the extension id to `vscode-agent-context` and the display name to
-  **Agent Context Studio**: both `agent-context` and the plain display name
-  `Agent Context` are already taken on the Marketplace by another publisher.
+- Renamed the extension to **Agent Context Manager**: the id is
+  `agent-context-manager` and the display name is `Agent Context Manager`
+  (both `agent-context` and the plain `Agent Context` name are already taken on
+  the Marketplace by another publisher).
 - Unified every view into the compact card style: **Rules**, **Agents**,
   **MCP**, **Commands** and **Plugins** are now webviews with a toggle, hover
   tooltip and open/reveal actions, like **Skills**.
@@ -83,7 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Summary, Skills, Rules & Instructions, Agents, MCP Servers, Commands &
-  Plugins and Health tree views in an Agent Context activity-bar container.
+  Plugins and Health tree views in an Agent Context Manager activity-bar container.
 - Global/project scope badges, shadowing and provenance with a "Why is this
   visible?" breakdown.
 - Seven-application model (VS Code, Antigravity IDE, Antigravity/Gemini, Codex,

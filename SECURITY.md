@@ -2,7 +2,7 @@
 
 ## Scope
 
-Agent Context is a local VS Code extension. It reads agent configuration from
+Agent Context Manager is a local VS Code extension. It reads agent configuration from
 `~/.agents` and a small set of project locations, and it never sends data to a
 server and never collects telemetry.
 

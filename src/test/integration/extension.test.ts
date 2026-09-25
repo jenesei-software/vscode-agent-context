@@ -1,9 +1,9 @@
 import * as assert from "node:assert";
 import * as vscode from "vscode";
 
-const EXTENSION_ID = "jenesei-software.vscode-agent-context";
+const EXTENSION_ID = "jenesei-software.agent-context-manager";
 
-suite("Agent Context extension", () => {
+suite("Agent Context Manager extension", () => {
   test("is present and activates", async () => {
     const extension = vscode.extensions.getExtension(EXTENSION_ID);
     assert.ok(extension, `extension ${EXTENSION_ID} should be installed`);

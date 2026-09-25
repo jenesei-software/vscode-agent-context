@@ -37,13 +37,13 @@ npm run check             # lint + typecheck + registry
 
 1. Open the repository in VS Code.
 2. Press `F5` to launch the Extension Development Host.
-3. Find **Agent Context** in the Activity Bar.
+3. Find **Agent Context Manager** in the Activity Bar.
 
 You can also install a build with:
 
 ```powershell
 npm run vsix
-code --install-extension vscode-agent-context-1.0.0.vsix
+code --install-extension agent-context-manager-<version>.vsix
 ```
 
 ## Project layout

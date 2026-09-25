@@ -11,7 +11,7 @@
   "command.refresh": "Refresh",
   "command.showApplicability": "Show Applicability",
   "command.openSettings": "Open Settings",
-  "config.title": "Agent Context",
+  "config.title": "Agent Context Manager",
   "config.agentsRoot": "Canonical agent configuration directory. Leave empty to use `~/.agents`.",
   "config.showThirdPartySkills": "Also list skills discovered from third-party locations such as `~/.copilot/skills` and `~/.claude/skills`.",
   "config.enabledApps": "Applications shown in the Applicability view and in entity tooltips."

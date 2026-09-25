@@ -84,8 +84,10 @@ export class ListViewProvider
       await this.dispatch(message);
     } catch (error) {
       const messageText = (error as Error).message;
-      console.error("Agent Context webview message failed:", error);
-      void vscode.window.showErrorMessage(`Agent Context: ${messageText}`);
+      console.error("Agent Context Manager webview message failed:", error);
+      void vscode.window.showErrorMessage(
+        `Agent Context Manager: ${messageText}`,
+      );
     }
   }
 
@@ -120,7 +122,7 @@ export class ListViewProvider
     if (!snapshot || !(await isWithinRoots(target, managedRoots(snapshot)))) {
       void vscode.window.showWarningMessage(
         vscode.l10n.t(
-          "Agent Context: refusing to open a file outside the managed directories.",
+          "Agent Context Manager: refusing to open a file outside the managed directories.",
         ),
       );
       return;
@@ -159,7 +161,7 @@ export class ListViewProvider
     if (!vscode.workspace.isTrusted) {
       void vscode.window.showWarningMessage(
         vscode.l10n.t(
-          "Agent Context: enabling and disabling is unavailable in an untrusted workspace.",
+          "Agent Context Manager: enabling and disabling is unavailable in an untrusted workspace.",
         ),
       );
       this.postState();
@@ -171,7 +173,7 @@ export class ListViewProvider
     ) {
       void vscode.window.showErrorMessage(
         vscode.l10n.t(
-          "Agent Context: refusing to modify an unknown or out-of-scope file.",
+          "Agent Context Manager: refusing to modify an unknown or out-of-scope file.",
         ),
       );
       this.postState();
@@ -191,7 +193,9 @@ export class ListViewProvider
         : await setFileEnabled(toggle.file, target);
 
     if (!result.ok) {
-      void vscode.window.showErrorMessage(`Agent Context: ${result.error}`);
+      void vscode.window.showErrorMessage(
+        `Agent Context Manager: ${result.error}`,
+      );
       this.postState();
       return;
     }

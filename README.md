@@ -1,8 +1,8 @@
-# Agent Context
+# Agent Context Manager
 
-[![Marketplace](https://img.shields.io/badge/Marketplace-Agent%20Context-007ACC?logo=visualstudiocode&logoColor=white)](https://marketplace.visualstudio.com/items?itemName=jenesei-software.vscode-agent-context)
+[![Marketplace](https://img.shields.io/badge/Marketplace-Agent%20Context%20Manager-007ACC?logo=visualstudiocode&logoColor=white)](https://marketplace.visualstudio.com/items?itemName=jenesei-software.agent-context-manager)
 [![Version](https://img.shields.io/badge/version-1.0.1-2ea44f)](CHANGELOG.md)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)](package.json)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-2ea44f)](package.json)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 One panel that collects everything shaping your AI agents in the current project:
@@ -89,12 +89,12 @@ The paths-per-application mapping is versioned in `src/model/apps.ts`
 
 ## Installation
 
-Install **Agent Context** from the Visual Studio Marketplace, or run
+Install **Agent Context Manager** from the Visual Studio Marketplace, or run
 `npm run vsix` and install the generated `.vsix`.
 
 ## Getting started
 
-1. Open the **Agent Context** view in the Activity Bar.
+1. Open the **Agent Context Manager** view in the Activity Bar.
 2. Expand **Summary** to see what actually applies in this workspace.
 3. Use the per-category lists to enable/disable entities and jump to their files.
 4. Use **Applicability** to see which applications pick up each entity.
@@ -112,9 +112,9 @@ Install **Agent Context** from the Visual Studio Marketplace, or run
 
 | Command | Description |
 | --- | --- |
-| `Agent Context: Refresh` | Re-scan canonical and project sources. |
-| `Agent Context: Show Applicability` | Focus the Applicability view. |
-| `Agent Context: Open Settings` | Open the extension settings. |
+| `Agent Context Manager: Refresh` | Re-scan canonical and project sources. |
+| `Agent Context Manager: Show Applicability` | Focus the Applicability view. |
+| `Agent Context Manager: Open Settings` | Open the extension settings. |
 
 ## Security
 
@@ -173,7 +173,7 @@ The plan below is fixed here on purpose, so the scope stays explicit.
 
 ## Support the project
 
-- Star the repository on [GitHub](https://github.com/jenesei-software/vscode-agent-context).
+- Star the repository on [GitHub](https://github.com/jenesei-software/vscode-agent-context-manager).
 - [Donate](https://www.donationalerts.com/r/jenesei).
 
 ## License
