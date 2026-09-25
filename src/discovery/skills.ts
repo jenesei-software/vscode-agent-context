@@ -12,7 +12,7 @@ import {
   asStringArray,
   parseFrontmatter,
 } from "../parse/frontmatter";
-import { listEntries, readText } from "../util/fsutil";
+import { listEntries, readText, resolveEntryDirectory } from "../util/fsutil";
 import { isInside } from "../util/paths";
 import { candidateDirs, type ScanContext } from "./context";
 
@@ -36,11 +36,15 @@ export async function scanSkills(
   for (const directory of directorySet) {
     const entries = await listEntries(directory);
     for (const entry of entries) {
-      if (!entry.directory || entry.name.startsWith(".")) {
+      if (entry.name.startsWith(".")) {
         continue;
       }
-      const activeFile = path.join(entry.path, "SKILL.md");
-      const disabledFile = path.join(entry.path, "SKILL.md.disabled");
+      const directory = await resolveEntryDirectory(entry);
+      if (!directory) {
+        continue;
+      }
+      const activeFile = path.join(directory, "SKILL.md");
+      const disabledFile = path.join(directory, "SKILL.md.disabled");
       let disabled = false;
       let raw = await readText(activeFile);
       if (raw === undefined) {
@@ -53,7 +57,7 @@ export async function scanSkills(
         issues.push({
           severity: "warning",
           message: `Skill folder "${entry.name}" has no SKILL.md.`,
-          path: entry.path,
+          path: directory,
           category: "skills",
           entity: entry.name,
         });
@@ -63,11 +67,12 @@ export async function scanSkills(
       const entity = buildSkill(
         context,
         entry.name,
-        entry.path,
+        directory,
         activeFile,
         raw,
         disabled,
         lock,
+        path.join(entry.path, "SKILL.md"),
       );
       collected.push(entity);
       issues.push(...entity.issues);
@@ -87,6 +92,7 @@ function buildSkill(
   raw: string,
   disabled: boolean,
   lock: LockFile,
+  appsPath: string,
 ): SkillEntity {
   const fm = parseFrontmatter(raw);
   const declared = asString(fm.data.name);
@@ -150,7 +156,7 @@ function buildSkill(
     description,
     valid: issues.every((issue) => issue.severity !== "error"),
     disabled,
-    apps: computeApps("skills", file, context.apps, context.workspaceRoot),
+    apps: computeApps("skills", appsPath, context.apps, context.workspaceRoot),
     issues,
     lock: lockFor(lock, name),
     duplicates: [],

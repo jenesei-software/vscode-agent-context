@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `tsconfig.test.json` now uses `Node16` module resolution (module10 was removed
   in TypeScript 7), and `npm test` clears `out/` first so stale compiled tests
   cannot run.
+- Skills linked as a directory symlink, or as a "git symlink" checked out as a
+  file containing the target path (default on Windows), are now discovered.
 
 ### Added
 

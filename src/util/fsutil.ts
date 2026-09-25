@@ -1,4 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
+import type { Stats } from "node:fs";
 import {
   readdir,
   readFile,
@@ -116,6 +117,49 @@ export async function listEntries(target: string): Promise<DirEntry[]> {
   } catch {
     return [];
   }
+}
+
+async function statPath(target: string): Promise<Stats | undefined> {
+  try {
+    return await stat(target);
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Resolves a directory entry that may be a real directory, a directory
+ * symlink, or a "git symlink" checked out as a small file whose content is the
+ * target path (the default on Windows without symlink support). Returns the
+ * directory to read from, or `undefined` when the entry is not a directory.
+ */
+export async function resolveEntryDirectory(
+  entry: DirEntry,
+): Promise<string | undefined> {
+  if (entry.directory) {
+    return entry.path;
+  }
+  const info = await statPath(entry.path);
+  if (info?.isDirectory()) {
+    return entry.path;
+  }
+  if (!info?.isFile()) {
+    return undefined;
+  }
+
+  const raw = await readText(entry.path, 8 * 1024);
+  if (raw === undefined) {
+    return undefined;
+  }
+  const target = raw.trim();
+  if (target.length === 0 || target.length > 1024 || /[\r\n]/.test(target)) {
+    return undefined;
+  }
+  const resolved = path.isAbsolute(target)
+    ? target
+    : path.resolve(path.dirname(entry.path), target);
+  const targetInfo = await statPath(resolved);
+  return targetInfo?.isDirectory() ? resolved : undefined;
 }
 
 export async function fileHash(target: string): Promise<string | undefined> {

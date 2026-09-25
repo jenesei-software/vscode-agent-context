@@ -45,6 +45,37 @@ test("scanAgents reports a parked *.agent.md as disabled", async () => {
   assert.equal(demo.path, path.join(agentsDirectory, "demo.agent.md"));
 });
 
+test("scanSkills follows a git symlink stored as a file", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "agent-context-link-"));
+  const agentsRoot = path.join(root, ".agents");
+  const linkDirectory = path.join(agentsRoot, "skills");
+  await mkdir(linkDirectory, { recursive: true });
+
+  const realDirectory = path.join(root, "skills", "demo");
+  await mkdir(realDirectory, { recursive: true });
+  await writeFile(
+    path.join(realDirectory, "SKILL.md"),
+    "---\nname: demo\ndescription: demo\n---\n",
+    "utf8",
+  );
+  await writeFile(
+    path.join(linkDirectory, "demo"),
+    path.relative(linkDirectory, realDirectory),
+    "utf8",
+  );
+
+  const { skills } = await scanSkills({
+    agentsRoot,
+    apps: [],
+    showThirdParty: false,
+  });
+  const demo = skills.find((skill) => skill.name === "demo");
+  assert.ok(demo, "the symlinked skill should be discovered");
+  assert.equal(demo.path, path.join(realDirectory, "SKILL.md"));
+  assert.equal(demo.directory, realDirectory);
+  assert.equal(demo.disabled, false);
+});
+
 test("scanRules skips a disabled rule and picks the next candidate", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "agent-context-rules-"));
   const rulesDirectory = path.join(root, "rules");
