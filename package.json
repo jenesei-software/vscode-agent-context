@@ -2,7 +2,7 @@
   "name": "vscode-agent-context",
   "displayName": "Agent Context",
   "description": "See everything that shapes your AI agents in this project: skills, agents, rules, MCP servers and plugins, their scope, overrides and which applications pick them up.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "jenesei-software",
   "license": "MIT",
   "repository": {
