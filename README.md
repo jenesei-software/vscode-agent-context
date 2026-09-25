@@ -173,8 +173,10 @@ The plan below is fixed here on purpose, so the scope stays explicit.
 
 ## Support the project
 
-- Star the repository on [GitHub](https://github.com/jenesei-software/vscode-agent-context-manager).
-- [Donate](https://www.donationalerts.com/r/jenesei).
+Agent Context Manager is free and open source. If it is useful to you:
+
+- ⭐ **Star the repository on [GitHub](https://github.com/jenesei-software/vscode-agent-context-manager)** — it helps other people find it.
+- ☕ **[DonationAlerts](https://www.donationalerts.com/r/cyrilstrone)** — a one-time donation keeps the project alive.
 
 ## License
 
